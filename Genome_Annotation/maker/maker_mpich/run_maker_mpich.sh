@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -N 1
+#SBATCH -N 18
 #SBATCH -n 20
 #SBATCH --cpus-per-task=1
 #SBATCH -e mpich_maker_20_finish.err           # File to which STDERR will be written
@@ -24,4 +24,4 @@ WORK_D=/home/eenbody/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW/Annotation/maker_
 
 cd $WORK_D
 
-/share/apps/mpich/3.1.4/bin/mpiexec -n 20 /home/eenbody/BI_software/maker-mpich/maker/bin/maker -fix_nucleotides
+/share/apps/mpich/3.1.4/bin/mpiexec -n 360 /home/eenbody/BI_software/maker-mpich/maker/bin/maker -fix_nucleotides
