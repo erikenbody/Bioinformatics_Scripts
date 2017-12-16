@@ -13,7 +13,7 @@ https://github.com/ajshultz/pop-gen-pipeline
 
 Below, you will find a running list of notes I made while running miscellaneous tasks related to this project. These include simple unix commands, helpful bash scripts, tips for transferring NGS data between clusters, and notes on the installation of various software.
 
-####Useful unix commands
+#### Useful unix commands
 ```bash
 cd .. 	#goes back to the previous directory
 mv 	#use this command to rename a file, you must include the name of the file followed by the new name
@@ -29,7 +29,7 @@ chmod +x #for giving yourself permission for a .sh file to run it
 
 To run something in the background, run it, then click `ctrl-z` then type `bg`, to check active jobs type `jobs`
 
-####Change file extensions
+#### Change file extensions
 I kinda messed them up at one point, so it is helpful to change extensions to simplify.
 ```
 for file in *.clp.fq.1_fastqc.zip
@@ -53,7 +53,7 @@ mv "$file" "${file%.clp.fq.2_fastqc.html}.R2_fastqc.html"
 done
 
 ```
-####Copying files from Odyssey
+#### Copying files from Odyssey
 
 I was not able to transfer files using BBCP from Harvard Oddyssey to Tulane Cypress. This may be because Harvard is not setup to run it? It is installed there however. When running just SCP, it timed out after 40min. So I set up an interactive session using:
 
@@ -84,9 +84,9 @@ When the second lane was available, I used this to copy
 scp -rp eenbody@odyssey.rc.fas.harvard.edu:/n/ngsdata/170824_NS500422_0539_AHWGYJBGX2/ .
 ```
 
-####Installing Software
+#### Installing Software
 
-#####FastQc
+##### FastQc
 Downloaded linux zip folder and used `scp` to copy to cluster. I can run it from the FastQC in my WD using ./fastqc. I was able to add it to my .bash_profile (which sources on startup) on cypress by adding it to my path
 
 helpful related link: https://www.ccs.uky.edu/docs/cluster/env.html
@@ -99,14 +99,14 @@ source #only neccessary this time when I hadnt restarted
 fastqc --help #to check
 ```
 
-#####Trinity
+##### Trinity
 Note: Trinity is a module, but I made this path to access scripts available to Trinity.
 
 ```bash
 PATH=$PATH:$HOME/bin:/home/eenbody/BI_software/trinityrnaseq-Trinity-v2.4.0/util
 ```
 
-#####multiqc
+##### multiqc
 This is a helpful little software package that compiles all of the fastqc files into a readable report. I installed locally using pip (its python based) and copied files from cypress locally. Harvard generated fastqc files during processing.
 
 To run on the cluster:
@@ -117,7 +117,7 @@ source activate ede_py
 multiqc .
 ```
 
-#####rcorrector
+##### rcorrector
 I scp repo from github that I downloaded locally to /BI_software and ran `make` within that directory. This pumped out an error code relating to kmercode, but I am still able to run the software. Some digging and the problem could be jellyfish, but Im not even sure of this. Was a bit unclear.
 
 Maybe fixed September 19
@@ -158,7 +158,7 @@ So to run:
 perl /home/eenbody/Enbody_WD/BI_software/rcorrector/run_rcorrector.pl
 ```
 
-#####cutadapt
+##### cutadapt
 Details here: https://wiki.hpc.tulane.edu/trac/wiki/cypress/AnacondaInstallPackage
 
 ```
@@ -186,10 +186,10 @@ module load anaconda
 source activate ede_py
 ```
 
-#####fastx toolkit
+##### fastx toolkit
 Was suggested by simon to use to make rRNA reference. But could not get it to compile. I instead used it on odyssey
 
-#####BUSCO
+##### BUSCO
 This is used to evaluate the quality of assembled transcripts. It is a python based software so I used anaconda to install. It should now run when I load anaconda and activate ede_py.
 
 ```bash
@@ -198,7 +198,7 @@ source activate ede_py
 conda install -c bioconda busco
 ```
 
-####Maintaining scripts
+#### Maintaining scripts
 I write scripts locally, then use rsync to keep them synced with my cypress directory.
 ```
 rsync -aP ~/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/Bioinformatics_Scripts cyp:/home/eenbody/Enbody_WD
