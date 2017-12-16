@@ -1,0 +1,44 @@
+#--------- command -------------#
+Widget::snap:
+/lustre/project/jk/Enbody_WD/BI_software/maker-mpich/maker/exe/snap/snap -plus -xdef /local/tmp/eenbody.589616/maker_YPfXlF/208/83_15.455300-465732.chicken.hmm.auto_annotator.xdef.snap  chicken
+.hmm /local/tmp/eenbody.589616/maker_YPfXlF/208/83_15.455300-465732.chicken.hmm.auto_annotator.snap.fasta > /local/tmp/eenbody.589616/maker_YPfXlF/208/83_15.455300-465732.chicken.hmm.auto_annot
+ator.snap
+#-------------------------------#
+scoring....decoding.10.20.30.40.50.60.70.80.90.100 done
+deleted:0 genes
+ ...processing 0 of 32
+ ...processing 1 of 32
+ ...processing 2 of 32
+ ...processing 3 of 32
+ ...processing 4 of 32
+ ...processing 5 of 32
+ ...processing 6 of 32
+ ...processing 7 of 32
+ ...processing 8 of 32
+ ...processing 9 of 32
+ ...processing 10 of 32
+ ...processing 11 of 32
+ ...processing 12 of 32
+ ...processing 13 of 32
+ ...processing 14 of 32
+ ...processing 15 of 32
+ ...processing 16 of 32
+ ...processing 17 of 32
+ ...processing 18 of 32
+ ...processing 19 of 32
+ ...processing 20 of 32
+ ...processing 21 of 32
+ ...processing 22 of 32
+ ...processing 23 of 32
+ ...processing 24 of 32
+ ...processing 25 of 32
+ ...processing 26 of 32
+ ...processing 27 of 32
+ ...processing 28 of 32
+ ...processing 29 of 32
+ ...processing 30 of 32
+ ...processing 31 of 32
+running  augustus.
+#--------- command -------------#
+Widget::augustus:
+/home/eenbody/.conda/envs/ede_py/bin/augustus  --strand=backward --species=chicken --UTR=off --hintsfile=/local/tmp/eenbody.589616/maker_YPfXlF/208/84_0.326225-346839.chicken.auto_annotator.xdef.augustus --extrinsicCfgFile=/home/eenbody/.conda/envs/ede_py/config//extrinsic/extrinsic.MPE.cfg --AUGUSTUS_CONFIG_PATH=/home/eenbody/.conda/envs/ede_py/config/ /local/tmp/eenbody.589616/maker_YPfXlF/208/84_0.326225-346839.chicken.auto_annotator.augustus.fasta > /local/tmp/eenbody.589616/maker_YPfXlF/208/84_0.326225-346839.chicken.auto_annotator.augustus

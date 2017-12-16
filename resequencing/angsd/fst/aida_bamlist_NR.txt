@@ -1,0 +1,6 @@
+/home/eenbody/reseq_WD/Preprocessing_fixed/04_indel_realign/merged_realigned_bams/11_33248_aida_CTGGCC_realigned.sorted.bam
+/home/eenbody/reseq_WD/Preprocessing_fixed/04_indel_realign/merged_realigned_bams/12_33249_aida_TAATGT_realigned.sorted.bam
+/home/eenbody/reseq_WD/Preprocessing_fixed/04_indel_realign/merged_realigned_bams/13_33252_aida_ATTTCG_realigned.sorted.bam
+/home/eenbody/reseq_WD/Preprocessing_fixed/04_indel_realign/merged_realigned_bams/14_33253_aida_TGTACG_realigned.sorted.bam
+/home/eenbody/reseq_WD/Preprocessing_fixed/04_indel_realign/merged_realigned_bams/15_33254_aida_CAGTGT_realigned.sorted.bam
+/home/eenbody/reseq_WD/Preprocessing_fixed/04_indel_realign/merged_realigned_bams/17_33257_aida_GACTCA_realigned.sorted.bam
