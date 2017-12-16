@@ -1,6 +1,6 @@
-###WSFW: RNAseq preprocessing overview
+### WSFW: RNAseq preprocessing overview
 
-####Merge fastq
+#### Merge fastq
 I ran one lane of nextseq, then adjusted volume of each sample based on the read depth for each sample. Then I ran the second lane of nextseq.
 
 This resulted in two folders each with a set of fastq files with identical names. It took me some time to come up with an easy way to do this. I made soft links into a directory 1lane/ and 2lane/ then ran the script `merge_lanes.sh` that I adapted from helpfiles online:
@@ -8,7 +8,7 @@ This resulted in two folders each with a set of fastq files with identical names
 found at: https://superuser.com/questions/947008/concatenate-csv-files-with-the-same-name-from-subdirectories
 
 
-###Rcorrector
+### Rcorrector
 *run time <1hr all files*
 
 Array overview:
@@ -49,7 +49,7 @@ The seemed to be in the syntax of the job script and not including the "S".
 not
 `./fq/*${SLURM_ARRAY_TASK_ID}.R1.fastq.gz`
 
-###remove unfixable kmers
+### remove unfixable kmers
 *run time <5min for two samples and <20min for all*
 
 Here are the in shell commands I ran to run kmer_fix_array.h
@@ -70,7 +70,7 @@ sbatch --array=11-12 ~/Bioinformatics_Scripts/RNAseq/QC_RNAseq/kmer_fix_array.sh
 
 ```
 
-###run trim galore
+### run trim galore
 *about an hour with standard settings and 1 node*
 Using the FAS recommendations for denovo assembly on Trinity
 
@@ -87,13 +87,13 @@ I then ran fastqc (see command below) on these files and found that adapter cont
 #later running with wafergen specific settings
 sbatch --array=1-41 ~/Bioinformatics_Scripts/RNAseq/QC_RNAseq/trim_galore_array_wafer.sh
 ```
-###fastqc
+### fastqc
 *this is pretty quick*
 ```
 sbatch --array=3 ~/Bioinformatics_Scripts/RNAseq/QC_RNAseq/fastqc_array.sh
 ```
 
-###Bowtie2 for rRNA contamination
+### Bowtie2 for rRNA contamination
 
 First, I had to download rRNA data from the silva database. I did this by downloading a fasta file after searching for zebra finch. I assume this was the best approach. I then ran a job submission (bowtie2_index) to make an index for this reference.
 
@@ -180,20 +180,5 @@ cat SILVA_128_LSURef_tax_silva_trunc_singleline_DNA.fasta SILVA_128_SSURef_Nr99_
 
 #gzip SILVA_128_LSURef_tax_silva_trunc_singleline_DNA.fasta
 #gzip SILVA_128_SSURef_Nr99_tax_silva_trunc_singleline_DNA.fasta
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ```

@@ -1,8 +1,8 @@
-###Running ANGSD
+### Running ANGSD
 *Downstream analysis of processed resequencing data*
 
 
-####Helpful references
+#### Helpful references
 
 Generally following workflow of ngsTools
 https://github.com/mfumagalli/ngsTools/blob/master/TUTORIAL.md
@@ -20,7 +20,7 @@ https://www.biostars.org/p/118954/
 bioawk -c fastx '{ print $name, length($seq) }'<WSFW_ref_final_assembly.fasta
 ```
 
-####Chromosome identity
+#### Chromosome identity
 `satsuma_run_zchr.sh`
 http://satsuma.sourceforge.net/manual.html
 
@@ -34,12 +34,12 @@ grep -E -o ".{0,5}scaffold.{0,5}" *refined* | sort| uniq
 #still needs to be sorted by hand in excel (split on _, then sort)
 ```
 
-####Estimating coverage of variable sites
+#### Estimating coverage of variable sites
 `check_coverage.sh`
 
 Following ngsTools advice and runnign the script `check_coverage.sh`. I can use the information from this run to inform min and max coverage of later ANGSD runs.
 
-####Site Frequency Spectrum (SFS) in ANGSD
+#### Site Frequency Spectrum (SFS) in ANGSD
 Calculate proportions of sites at different allele frequencies. First, need to calculate Sample Allele Frequency for each site (and per chromosome region), then run the SFS software; both in ANGSD.
 
 * Run separately for each population (moretoni, lorentzi, naimii, aida)
@@ -90,7 +90,7 @@ realSFS results_saf/${SAMPLES}_ZChr.saf.idx -P 8 > results_saf/${SAMPLES}_ZChr.s
 ```
 
 
-####Call FST in sliding windows
+#### Call FST in sliding windows
 
 Can also be done in ANGSD. Follow suggestions from ngsTools. This will use SFS from previous section.
 
@@ -109,7 +109,7 @@ $ANGSD/misc/realSFS fst index Results/moretoni.zchr_scaffolds.ref.saf.idx Result
 | naimii vs lorentzi | 0.032364      |  0.257469   |
 
 
-####Simple PCA
+#### Simple PCA
 
 This is very simple PCA, without separating chromosomes
 
@@ -138,7 +138,7 @@ echo $N_SITES
 
 run `02_ngsCovar_run.sh`
 
-#####Plot the PCA using R
+##### Plot the PCA using R
 first need to make a comma seperated string of file names. Nice solution here:
 https://stackoverflow.com/questions/24884851/converting-a-list-to-double-quoted-comma-separated-strings
 

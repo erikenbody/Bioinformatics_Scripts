@@ -1,4 +1,4 @@
-###STAR alignments
+### STAR alignments
 
 
 SHOULD I BE USING UNPAIRED READS POST TRIM GALORE????
@@ -21,4 +21,4 @@ STAR --runThreadN 20 --genomeDir /lustre/project/jk/Enbody_WD/WSFW_DDIG/Referenc
 
 ```
 This doesnt work. Turns out you cannot run quantmode (neccessary for DEseq etc) without annotations!
-Time to decide if I need to annotate my genome or what. I am trying trinity guided alignment now. 
+Time to decide if I need to annotate my genome or what. I am trying trinity guided alignment now.

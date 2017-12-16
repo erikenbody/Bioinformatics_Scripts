@@ -1,7 +1,7 @@
-####Resequencing preprocessing overview
+#### Resequencing preprocessing overview
 *following GATK best practices generally*
 
-####Create indexes
+#### Create indexes
 Necessary for running all preprocessing steps. Can do in iDev
 
 First, I created a BWA index of the reference genome using default parameters.
@@ -31,7 +31,7 @@ java -jar ~/BI_software/picard.jar CreateSequenceDictionary \
     OUTPUT=WSFW_ref_final_assembly.dict
 ```
 
-####01 Initial mapping
+#### 01 Initial mapping
 `sbatch --array=1-37 01_1piped_fq_clean.sh`
 `sbatch --array=1=37 01_2piped_fq_clean.sh`
 `sbatch --array=1=37 01_3piped_fq_clean.sh`
@@ -41,11 +41,11 @@ GATK suggests retaining flow cell info and those not using cat to merge all read
 
 This ran cleanly after some trouble shooting. I am running it now for all three lanes of sequencing separately. Accidentally didn't put the replicate number correctly (put 1 for all three runs) in the filenames. This didnt effect metadata in the files. I used the command `rename _1_ _2_ *` within the subdirectory to fix this.
 
-####02 Mark duplicates
+#### 02 Mark duplicates
 `02_jacard_dedup.sh`
 This appears to be the next step. This will merge the three runs into one and mark duplicates reads (without removing them). This ran smoothly, but for this step and all below I had to reduce the memory used by java (i.e. java -Xmx16g) to 16gb (was trying 60gb and several in between). This is consistent with issues reported by others on the GATK website.
 
-####03 sort,index,summary
+#### 03 sort,index,summary
 Time elapsed: 22-35min per sample
 
 Sort the dedup files, index them, and provide some summary information and Validate.
@@ -53,7 +53,7 @@ Sort the dedup files, index them, and provide some summary information and Valid
 03.2
 Folowup should be to check all the metrics files, but I cannot get the python script to run. Says there are no metrics files. Issue with input I assume.
 
-####Indel realignment
+#### Indel realignment
 No longer recommended by GATK, but appears to be necessary before doing ANGSD. Need to compare these two options. ANGSD looks complicated.
 
 It appears the workflow is:
