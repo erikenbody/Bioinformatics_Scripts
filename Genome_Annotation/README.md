@@ -1,9 +1,9 @@
-###Annotating the WSFW reference genome using MAKER
+### Annotating the WSFW reference genome using MAKER
 
 
-####Pre Maker software
+#### Pre Maker software
 
-####RepeatModuler
+#### RepeatModuler
 `rm_db.sh`
 
 This is ridiculously difficult to install with a ton of dependencies.
@@ -18,7 +18,7 @@ Masked a bunch of stuff. Was unclear how to unmask transposons, so proceeding ju
 **Note that SS and the ratite project did not do this, but it came highly reccomended in the Maker tutorial so I ran it.It does take quite a bit of time to run**
 
 
-#####Trinity with jaccard_clip
+##### Trinity with jaccard_clip
 `trinity_47816.sh`
 
 All the google groups tips suggest that I should re run trinity with jaccard_clip. This is taking forever and generates tons of  files. It failed on 10/27 with something called parafly bailing. I found a possible solution here:
@@ -28,7 +28,7 @@ so I deleted the output folder and resubmitted the same command.
 
 Then, SS pointed out that I shouldnt use trinity results from all individuals, I should just use one. So I canceled this and can pick it up again if necessary (although later I deleted these files to save space). Re running just 487816 chest and sp, because its a male (like the ref). See `trinity_47816.sh` for detials on how I ran this.
 
-#####TopHat
+##### TopHat
 `tophat_sj.sh`
 
 SS also ran tophat to get splice junctions. TopHat reports a quality index for splice junctions and I'm not sure that STAR does. So I will run TopHat for the 47816 individual I am running with trinity. After running tophat, I used this command from Simon/ratite folks (work dir is the tophat output)
@@ -37,21 +37,21 @@ SS also ran tophat to get splice junctions. TopHat reports a quality index for s
 then, to make input compatible for Maker
 `tophat2gff3 high_quality_junctions.bed > high_quality_junctions.gff`
 
-#####BUSCO
+##### BUSCO
 `ref_busco_long.sh`
 
 Initially, I trained augustus on my reference following the "Assemblage pipeline." I ran BUSCO with --long, this will train with Augustus. This will be an informative gene model for input to Maker. I ran `ref_busco_long.sh` for this.
 
 I did not use this data and instead used training data from the ratite project (chicken.hmm) as per SS's suggestion.
 
-#####GeneMark
+##### GeneMark
 Super difficult to install. Had to learn how to install perl modules locally. I was able to run this, but did not use in my Maker run when I started following the ratite protocol.
 
-#####Proteins and EST data
+##### Proteins and EST data
 
 See the appendix of this document for the proteins I downloaded. I also downloaded all EST's on ncbi for Zebra Finch and included in my maker input.
 
-####MAKER
+#### MAKER
 I started installing MAKER, which is quite involved. I ran `perl5 Build.pl`, then ran ./Build installdeps and ./Build installexes.
 
 There was one package in installdeps that didnt work. DBG::Pg. There is an issue with a file pg_config, which according to google means that needed some other dependency (which I couldnt install without root). This is called optional, so skipping for now. If you try to fix google: MAKER software bd pg path to pg_config. I never got this to work, running without.
@@ -64,7 +64,7 @@ Some of the exe dependencies in maker did not set up automatically in the `maker
 
 One issue I found when trying to set up OpenMPI is that openmpi was installed in my conda env and it was trying to call it from this. So I uninstalled openmpi from the conda env, then added the full path to the mpirun or mpiexec command (after loading intel-pxse, I typed `which mpirun` to find this path, or do this for mpiexec with mpich/OpenMPI) to the slurm script `run_maker.sh`. This seems to have worked out ok.
 
-######MPI in maker
+###### MPI in maker
 This has to be installed during maker installation (during the `perl Build.PL`). However, I did it wrong, and was able to just rerun this command later to set up the correct MPI paths. Maker is built around using OpenMPI or MPICH, which all the forum posts are about (and the INSTALL file). However, Tulane's Cypress is built around using intel-pxse, so I set it up to run using this instead. This means during install I used this two paths in the MPI install:
 ```
 /share/apps/intel_parallel_studio_xe/2015_update1/impi/5.0.2.044/intel64/bin/mpicc
@@ -107,12 +107,12 @@ cd $WORK_D
 ```
 
 
-####Running maker
+#### Running maker
 See above for notes on troubleshooting. This took several days when I was running only 20 tasks or only one one node (and never finished). When I grabbed 18 nodes, it seems to have finished within a day (although had already run for awhile on one node), but hung at the end. So if you can get this to run on 360 tasks, it might take only one day.
 
 One helpful tip was to make sure the out log was continuously having information added to it. It was obvious when it hung, because the file as not being modified for hours or days.
 
-####Check maker output
+#### Check maker output
 From SS's document:
 
 ```
@@ -144,7 +144,7 @@ Now merge output gffs and fasta (run in idev)
 Next for some QC and pre retraining. Following directions from both SS's document and the assemblage pipeline:
 https://github.com/sujaikumar/assemblage/blob/master/README-annotation.md
 
-#####SNAP retraining
+##### SNAP retraining
 ```
 cd .. #maker wd
 mkdir trainsnap
@@ -343,7 +343,7 @@ nucUTP= 0 nucUFP=0 nucUFPinside= 0 nucUFN=0
 # augustus --species=wsfw WSFW.gb.train.test
 ```
 
-#####Maker Second Run
+##### Maker Second Run
 
 Run maker a second time with the SNAP and Augustus retraining parameters. I also added in the tRNAscan, which I could have included in the first run. I made a copy of the reference genome for this run and called it `WSFW_assembly_maker2.fasta`. This allows me to run maker in the same folder and it generates a second output folder with a different name than the first one. It looks like I could have also done `maker -base Maker_run2`, or similar, to make it run with a different name. I ran this in the same working directory, but I created a second opts file named `maker_opts_run2.ctl` and ran maker with the following command (in the slurm script `part2/run_maker_mpich.sh`):
 
@@ -360,10 +360,10 @@ augustus_species=wsfw #Augustus gene prediction species model
 trna=1 #find tRNAs with tRNAscan, 1 = yes, 0 = no
 ```
 
-######Run time
+###### Run time
 The second Maker run ran on 18 cores using MPICH MPI and failed after 23:33, which is strangely close to the 24 hour limit. I then ran it again, and it failed after 12 minutes. I ran on one node with 20 processors and it failed in 1hr 22min. The error code was strange, but with the Cypress admin helped I found it was related to MPICH. I ran on one core without multiple processors (-N 1 -n 1) and Maker finished in 1 day, 15hours.
 
-######Checking Maker run 2 output
+###### Checking Maker run 2 output
 Output of log file says Maker finished. 4903 scaffolds listed as 'FINISHED'
 
 ```
@@ -458,7 +458,7 @@ AED	WSFW_assembly_maker2.all.gff
 1.000	1.000
 ```
 
-####JBrowse
+#### JBrowse
 
 Installing JBrowse was extremely confusing and I wont get into detail here. But, I cannot find a way to run it on the cluster so run it locally only. **The key was to find the directory on your OS where documents can be hosted on the network**. On macOS this is `/Library/WebServer/Documents`. This is where you will install your apache web sever and jgbrowse.
 
@@ -510,7 +510,7 @@ I spent several hours installing InterProScan (mostly downloading the enormous i
 
 Next step - try the tips for running Blast
 
-#####Appendix: Proteins
+##### Appendix: Proteins
 SS downloaded proteins from a ton of species. Guess I will do that. He didn't use EST from ZEFI, but I cant imagine it would hurt to include those. Here are the commands I ran:
 
 ```
