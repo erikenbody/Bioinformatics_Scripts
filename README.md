@@ -1,5 +1,5 @@
-###Bioinformatics Scripts Overview
-#####*And other related first steps, including software installation*
+### Bioinformatics Scripts Overview
+##### *And other related first steps, including software installation*
 
 This repository is just a place to deposit scripts used while analyzing Whole-genome Resequencing and RNAseq data related to my dissertation on White-shouldered Fairywrens (more info: erikenbody.github.io).
 
