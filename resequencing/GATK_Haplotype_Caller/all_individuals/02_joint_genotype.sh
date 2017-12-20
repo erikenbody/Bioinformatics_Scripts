@@ -14,7 +14,7 @@
 export PATH=/usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin:$PATH
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk.x86_64/jre
 
-SAMPLEDIR=/home/eenbody/reseq_WD/GATK_Haplotype_Caller/all_individuals
+SAMPLEDIR=/home/eenbody/reseq_WD/GATK_Haplotype_Caller/all_individuals/01_haplotype_caller
 REF=/home/eenbody/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW/WSFW_ref_final_assembly.fasta
 WORK_D=/home/eenbody/reseq_WD/GATK_Haplotype_Caller/all_individuals
 

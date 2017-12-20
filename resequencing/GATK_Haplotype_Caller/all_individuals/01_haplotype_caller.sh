@@ -6,7 +6,7 @@
 #SBATCH -o ./logs/variant_caller_%A_%a.out           # File to which STDOUT will be written
 #SBATCH -J VariantCaller           # Job name
 #SBATCH --mem=64000
-#SBATCH --cpus-per-task=20 
+#SBATCH --cpus-per-task=20
 #SBATCH --qos=normal
 
 export PATH=/usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin:$PATH
@@ -17,11 +17,13 @@ REF=/home/eenbody/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW/WSFW_ref_final_assem
 WORK_D=/home/eenbody/reseq_WD/GATK_Haplotype_Caller/all_individuals
 
 if [ -d "logs" ]; then echo "logs file exists" ; else mkdir logs; fi
+if [ -d "01_haplotype_caller" ]; then echo "logs file exists" ; else mkdir 01_haplotype_caller; fi
 
 cd $SAMPLEDIR
 FILENAME=`ls -1 *sorted.bam | awk -v line=$SLURM_ARRAY_TASK_ID '{if (NR == line) print $0}'`
 SAMPLE=$(echo $FILENAME | rev | cut -c 18- | rev)
 cd $WORK_D
+OUT=01_haplotype_caller
 
 java -Xmx16g -XX:ParallelGCThreads=1 -jar ~/BI_software/GenomeAnalysisTK.jar \
 -T HaplotypeCaller \
@@ -31,4 +33,4 @@ java -Xmx16g -XX:ParallelGCThreads=1 -jar ~/BI_software/GenomeAnalysisTK.jar \
 -nct 20 \
 -I $SAMPLEDIR/${SAMPLE}_dedup_sorted.bam \
 --emitRefConfidence GVCF \
--o ${SAMPLE}.raw.g.vcf
+-o $OUT/${SAMPLE}.raw.g.vcf

@@ -1,0 +1,10 @@
+19_47720_moretoni_GTAGGC
+20_36126_moretoni_AGACCA
+21_36148_moretoni_TCAGCC
+22_36149_moretoni_ACGGTC
+23_36182_moretoni_TTCGAA
+24_36188_moretoni_AGGTAC
+32_47707_moretoni_CATTAG
+33_47717_moretoni_TCGGAT
+34_47745_moretoni_CGATGT
+35_47815_moretoni_TGACCA

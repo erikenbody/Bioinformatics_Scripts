@@ -16,8 +16,8 @@ export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk.x86_64/jre
 module load python/2.7.11
 
 MAKER_HOME=/home/eenbody/maker_mpich/WSFW_assembly_maker2.maker.output
-WORK_D=/home/eenbody/maker_mpich/WSFW_assembly_maker2.maker.output/functional_annotation/interproscan
+WORK_D=/home/eenbody/maker_mpich/WSFW_assembly_maker2.maker.output/functional_annotation/interproscan_all
 
 cd $WORK_D
 
-interproscan.sh -i $MAKER_HOME/WSFW_assembly_maker2.all.maker.proteins.fasta -t p -dp -pa -appl PfamA,ProDom,SuperFamily,PIRSF --goterms --iprlookup
+interproscan.sh -i $MAKER_HOME/WSFW_assembly_maker2.all.maker.proteins.fasta -t p -dp -pa --goterms --iprlookup

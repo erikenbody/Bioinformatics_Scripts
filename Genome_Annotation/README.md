@@ -500,15 +500,58 @@ bin/generate-names.pl --verbose --out data/json/wsfw_maker
 ```
 
 ##### Functional annotation
-
 Useful starting point:
 https://scilifelab.github.io/courses/annotation/2016/practical_session/ExerciseFuncAnnotInterp
 
+###### InterProScan
+`InterProScan.sh`
+*finished in 2.5 hours with a subset of database*
+
 Maker can add functional annotations after running the software InterProScan 5 or blast.
 
-I spent several hours installing InterProScan (mostly downloading the enormous install files) and found an error when running test data. After checking the github issues page (https://github.com/ebi-pf-team/interproscan/issues/40) this seems to be an issue with rblastp. They have some fixes, but these require c++ 4.8 or above, and the Cypress version is 4.4.7. So I have a problem. May be able to run a local install of c++, but I should probably check with cluster folks.
+I spent several hours installing InterProScan (mostly downloading the enormous install files) and found several errors. Others report these. I had to fix binaries for SFLD, Gene3D, and rspbproc. This involved just replacing binaries in /bin with those at the links below.
 
-Next step - try the tips for running Blast
+Good tips here to my problems (put in google translate):
+https://qiita.com/okuman/items/73bebfd711d3f955c167
+
+Also tips here (found this later, seems to be same as above):
+https://github.com/ebi-pf-team/interproscan/wiki/Interproscan5_24_63_ReleaseNotes
+
+
+##### Blast
+`blastp_func.sh`
+
+This will blast all the protein sequences against the uniprot database.
+
+First, download uniprot databases. I downloaded both curated and uncurated. Useful tips here for this, could run as a script:
+https://gist.github.com/pansapiens/f899b20f6e9f8b88315aeb082b4211eb
+
+```
+RELEASE=2017_11
+wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
+wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.fasta.gz
+gunzip *.gz
+cat uniprot_sprot.fasta uniprot_trembl.fasta > uniprot_${RELEASE}.fasta
+makeblastdb -in uniprot_${RELEASE}.fasta -out uniprot_${RELEASE} -dbtype prot -parse_seqids -title uniprot_${RELEASE}
+```
+
+To run blast on the maker protein file, run `blastp_func.sh`. Key is to first make database (which, with the uniprot/swissprot combined) generates a lot of files so I put in a subdirectory. Be careful with what you name the database when making it, because you enter this exactly when running blastp. So if db name is WSFW_db, dont put the .fasta extension of the main file. Look at my shell script as an example if you get this error.
+
+For checking progress, got some tips here:
+https://www.biostars.org/p/16471/
+
+Had to make some edits to their suggestions. I ran (at 9:15am on Dec 19):
+```
+cat uniprot_2017_11.fasta | wc -l
+>705441742
+tail -1 WSFW_maker_blast.out | cut -f 2 > lastqueryblasted
+cat lastqueryblasted
+>A0A1D5P3P8
+grep -n -f lastqueryblasted uniprot_2017_11.fasta
+>690060706:>tr|A0A1D5P3P8|A0A1D5P3P8_CHICK ADAM metallopeptidase with thrombospondin type 1 motif 4 OS=Gallus gallus GN=LOC100858999 PE=4 SV=1
+echo "(690060706 / 705441742) *100" | bc -l
+>97.81965893365011564600
+```
 
 ##### Appendix: Proteins
 SS downloaded proteins from a ton of species. Guess I will do that. He didn't use EST from ZEFI, but I cant imagine it would hurt to include those. Here are the commands I ran:

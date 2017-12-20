@@ -1,10 +1,10 @@
-###Transcript quant and expression
+### Transcript quant and expression
 
 This will use RSEM to quantify transcript abundance in the absence of annotation data from a reference genome. The results of this can be used in differential expression analyses using count data.
 
-#####Starting with Trinity de novo (not guided)
+##### Starting with Trinity de novo (not guided)
 
-#####RSEM
+##### RSEM
 
 Testing these commands first from the FAS suggestions. `--strand-specific` indicates that this will use Bowtie2's --norc command which indicates stranded data.
 ```bash
@@ -12,7 +12,7 @@ rsem-calculate-expression --bowtie2 --num-threads 1 --strand-specific --paired-e
 ```
 This seems to have worked, so running `rsem_exp_array.sh` on first individual in array.
 
-#####Kallisto
+##### Kallisto
 fast way
 
 Running one command fist in idev

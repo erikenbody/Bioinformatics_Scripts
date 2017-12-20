@@ -1,0 +1,10 @@
+18_33297_lorentzi_ATGACT
+25_47617_lorentzi_TATCAG
+26_47623_lorentzi_CCATGT
+27_47631_lorentzi_ATGCGC
+28_47653_lorentzi_TTAGCT
+29_47657_lorentzi_GCCATA
+30_47672_lorentzi_AGTGCC
+31_47683_lorentzi_CTTGAC
+36_97513_lorentzi_GCCAAT
+37_97528_lorentzi_CTTGTA
