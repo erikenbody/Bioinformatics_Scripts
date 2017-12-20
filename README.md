@@ -25,6 +25,7 @@ control z #then type# bg 	#use this when you want to push a command into the bac
 du #checks size of files use -b for byte calcs (more accurate?) and -h for human readable
 ln -s #make a soft link to a file or folder. I did this in my cypress home folder to my lustre working directory
 chmod +x #for giving yourself permission for a .sh file to run it
+column -t #outputs a tsv file nicely (i.e. columns seperated nicely)
 ```
 
 To run something in the background, run it, then click `ctrl-z` then type `bg`, to check active jobs type `jobs`
@@ -83,6 +84,27 @@ When the second lane was available, I used this to copy
 ```bash
 scp -rp eenbody@odyssey.rc.fas.harvard.edu:/n/ngsdata/170824_NS500422_0539_AHWGYJBGX2/ .
 ```
+
+#### Running R on Cypress
+
+Pretty straightforward. One issue I had is to not run R when I have an Anaconda environment active. I could probably troubleshoot this, but it just seems to mess up the paths somehow.
+
+To install packages:
+
+```
+module load R/3.4.1-intel
+export R_LIBS_USER=/home/eenbody/BI_software/R/Library:$R_LIBS_USER
+R
+install.packages("ggplot2")
+library(ggplot2)
+#sometimes had trouble with cran,try
+library(devtools)
+install_github("hadly/tidyverse")
+
+q()
+
+```
+
 
 #### Installing Software
 
