@@ -15,7 +15,7 @@ module load zlib/1.2.8
 
 source activate ede_py
 
-SAMPLEDIR=/home/eenbody/reseq_WD/GATK_Haplotype_Caller/all_individuals/seperate_snps_indels
+SAMPLEDIR=/home/eenbody/reseq_WD/GATK_Haplotype_Caller/all_individuals/04_seperate_snps_indels
 if [ -d "qual_info_snps" ]; then echo "info dir exists" ; else mkdir qual_info_snps; fi
 
 

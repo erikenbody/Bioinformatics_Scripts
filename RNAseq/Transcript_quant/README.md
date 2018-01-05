@@ -19,3 +19,15 @@ Running one command fist in idev
 ```bash
 kallisto quant -i ./ref/Trinity.idx -o 10-33254-aida-Chest_S10.kallisto_out -b 100 -t 20 --fr-stranded 10-33254-aida-Chest_S10_clp.fq.1.gz  10-33254-aida-Chest_S10_clp.fq.2.gz
 ```
+
+##### Next steps
+
+It would probably be worthwhile to investigate Trinity's documentation on QC and batch effects:
+https://github.com/trinityrnaseq/trinityrnaseq/wiki/QC-Samples-and-Biological-Replicates
+
+Can I do something similar with STAR output?
+
+This requires quantification matrices which I dont think I've created yet (but maybe did when I ran RSEM?):
+https://github.com/trinityrnaseq/trinityrnaseq/wiki/Trinity-Transcript-Quantification
+
+For diff expression , it would be interesting to compare between body parts vs. between populations in one big heat map. This should be possible and might even be one utility of Trinotate Web.

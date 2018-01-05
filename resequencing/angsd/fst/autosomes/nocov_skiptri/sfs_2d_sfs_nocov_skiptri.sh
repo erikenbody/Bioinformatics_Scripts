@@ -32,17 +32,17 @@ REGIONS=$HOME_D/${RUN}.txt
 #MINCOV=40 #.info file is 0.01 percentile here at global coverage
 #MAXCOV=400 #well after last value, as in example
 
-#for POP in aida naimii lorentzi moretoni
-#do
-#  echo $POP
-#  MININD=$(if [[ "$POP"  == "aida" ]]; then echo 4; else echo 5; fi)
-#  BAMLIST=$HOME_D/${POP}_bamlist.txt
-#  angsd -b $BAMLIST -ref $REFGENOME -anc $REFGENOME -out Results/${POP}.${RUN}.ref -rf $REGIONS -P 20\
-#                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 0 -trim 0 \
-#                -minMapQ 20 -minQ 20 -minInd $MININD -doCounts 1 \
-#                -GL 1 -doSaf 1
-#  realSFS Results/${POP}.${RUN}.ref.saf.idx -P 20 > Results/${POP}.${RUN}.ref.sfs
-#done
+for POP in aida naimii lorentzi moretoni
+do
+ echo $POP
+ MININD=$(if [[ "$POP"  == "aida" ]]; then echo 4; else echo 5; fi)
+ BAMLIST=$HOME_D/${POP}_bamlist.txt
+ angsd -b $BAMLIST -ref $REFGENOME -anc $REFGENOME -out Results/${POP}.${RUN}.ref -rf $REGIONS -P 20\
+               -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 0 -trim 0 \
+               -minMapQ 20 -minQ 20 -minInd $MININD -doCounts 1 \
+               -GL 1 -doSaf 1
+ realSFS Results/${POP}.${RUN}.ref.saf.idx -P 20 > Results/${POP}.${RUN}.ref.sfs
+done
 
 POP1=aida
 POP2=naimii
@@ -84,3 +84,7 @@ realSFS fst stats2 Results_whichFST1/${POP1}_${POP4}.pbs.fst.idx -win 50000 -ste
 realSFS fst stats2 Results_whichFST1/${POP2}_${POP3}.pbs.fst.idx -win 50000 -step 10000 -whichFST 1 > Results_whichFST1/${POP2}_${POP3}_a.pbs.txt
 realSFS fst stats2 Results_whichFST1/${POP2}_${POP4}.pbs.fst.idx -win 50000 -step 10000 -whichFST 1 > Results_whichFST1/${POP2}_${POP4}_a.pbs.txt
 realSFS fst stats2 Results_whichFST1/${POP3}_${POP4}.pbs.fst.idx -win 50000 -step 10000 -whichFST 1 > Results_whichFST1/${POP3}_${POP4}_a.pbs.txt
+
+#workspace
+realSFS fst index Results/${POP1}.${RUN}.ref.saf.idx Results/${POP2}.${RUN}.ref.saf.idx -sfs Results/${POP1}_${POP2}.sfs -fstout Results/test1.pbs -whichFST 0
+realSFS fst stats2 Results/${POP1}_${POP2}.pbs.fst.idx -win 50000 -whichFST 0 > Results/TEST1_a.pbs.txt

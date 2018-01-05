@@ -89,6 +89,31 @@ angsd -bam ${BAMLISTDIR}/${SAMPLES}_BamList.txt -anc ${ANC} -uniqueOnly 1 -remov
 realSFS results_saf/${SAMPLES}_ZChr.saf.idx -P 8 > results_saf/${SAMPLES}_ZChr.sfs
 ```
 
+#### Filtering in ANGSD
+
+Trying to filter as strictly as I do in GATK, but having some troubles. Here is what I'm running:
+
+```
+angsd -b $BAMLIST -ref $REFGENOME -anc $REFGENOME -out Results/${POP}.${RUN}_${DESCRIPTION}.ref -rf $REGIONS -P 20 \
+              -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 0 -trim 0 \
+              -minMapQ 20 -minQ 20 -setMinDepth 83.66 -setMaxDepth 334.64 -SNP_pval 1e-6 -minInd $MININD -minMaf 0.01 \
+              -doCounts 1 \
+              -doMaf 1 -doMajorMinor 1 -GL 1 -doSaf 1
+```
+
+Originally I ran with depth as per individual (3-11). Both the command above and that one lead to very few sites at the end. It makes me think I am not understanding the depth filter command correctly, which is frustrating. Maybe I should just filter out excessively high coverage and leave it at that.
+
+* uniqueOnly - Remove reads that have multiple best hits. 0 no (default), 1 remove.
+* remove_bads - Same as the samtools flags -x which removes read with a flag above 255 (not primary, failure and duplicate reads). 0 no , 1 remove (default).
+* only_proper_pairs - Include only proper pairs (pairs of read with both mates mapped correctly). 1: include only proper (default), 0: use all reads. Only relevant for paired end data.
+* trim - Number of bases to remove from both ends of the read.
+* minMapQ - remove sites <20 map Quality
+* minQ - low quality base calls
+* depth - still having issues with this
+* SNP_pval - sets it to biallelic sites? Still somewhat unclear on this
+* minInd - remove sites not called for less individuals than this
+* minMaf - remove sites with <0.01 minimuma allele frequency
+
 
 #### Call FST in sliding windows
 
@@ -108,6 +133,68 @@ $ANGSD/misc/realSFS fst index Results/moretoni.zchr_scaffolds.ref.saf.idx Result
 | moretoni vs naimii |  0.031570     |  0.233177   |
 | naimii vs lorentzi | 0.032364      |  0.257469   |
 
+#### Possible sliding window bug
+
+A number of scaffolds that are shorter than the window input appear in the pbs/fst file output. These appear in the manhattan plot on the far right. On close inspection, they have Fst calculations for long stretches of regions.
+
+E.g. scaffold 2414 is only 4419bp long, but has many windows recorded. Here are the first 4 lines of the .pbs file out, but there are many windows for this scaffold. Other scaffolds of similar length do not have any output for them.
+```
+(4494,54464)(10000,59999)(10000,60000)	scaffold_2414	35000	49972	0.092939
+(14494,64396)(20000,69999)(20000,70000)	scaffold_2414	45000	49904	0.053504
+(24482,74334)(30000,79999)(30000,80000)	scaffold_2414	55000	49854	0.052940
+(34474,84305)(40000,89999)(40000,90000)	scaffold_2414	65000	49833	0.054498
+```
+
+It does not look like they are grouping with scaffold 241, for example and getting the length. Instead, I can see that the values for 2414 are the same as scaffold_0. The results for 2498 correspond to scaffold 1. So for some reason, when it gets to this scaffold, it calculates Fst for the first scaffold in the list, then the same for the next, iteratively. But it is not clear why this would happen starting at scaffold 2414 and not earlier. There are many scaffolds in the list that have shorter lengths before it.
+
+To do and solutions:
+* Can just filter out scaffolds with length < window length in R after the fact. Or, could include these as -rf? I made scaffolds that could be used as -rf with realSFS (in the r project output folder)
+* Run fst window in terminal to see output. See if you can identify what output says in the scaffold of interest (e.g. 2414). Can also try running just for scaffold 2414 and see what output is.  
+
+Now I am trying to look at each output to see how many sites it finds on scaffold_2414. Already know that the window .pbs output has too many regions calculated, so going back from there.
+
+Good visualization of the fst file from ANGSD has too many sites at 2414, but correct for 2415
+
+
+```
+realSFS fst print aida_naimii.pbs.fst.idx -r scaffold_2414
+>scaffold_2414	101	0.000011	0.000209
+>scaffold_2414	102	0.000011	0.000206
+>scaffold_2414	103	0.000011	0.000203
+>scaffold_2414	104	0.000011	0.000206
+```
+
+```
+realSFS fst print aida_naimii.pbs.fst.idx -r scaffold_1
+>scaffold_1	101	0.000011	0.000209
+>scaffold_1	102	0.000011	0.000206
+>scaffold_1	103	0.000011	0.000203
+>scaffold_1	104	0.000011	0.000206
+```
+
+Checking the bam file (I checked the ref fasta earlier to confirm scaffold length is correct)
+```
+samtools view 10_33240_naimii_CTGAAA_realigned.sorted.bam scaffold_2414 | less -S
+#looks about the right number of positions
+samtools view 10_33240_naimii_CTGAAA_realigned.sorted.bam scaffold_1 | less -S
+#has many more, checks out with length
+samtools view 10_33240_naimii_CTGAAA_realigned.sorted.bam scaffold_2415 | less -S
+#looks about like 2414
+```
+
+So raw input looks fine.
+
+Looking at the SAF output from ANGSD, it looks OK for these scaffolds. Many of them had far fewer sites than the reference genome (e.g. maybe 1000/5000), whereas other scaffolds that later got omitted by the realSF fst caller generally had more reads. Probably nothing to do with it.
+
+```
+realSFS print aida.autosome_scaffolds.ref.saf.idx -r scaffold_2414 | less -S
+realSFS print aida.autosome_scaffolds.ref.saf.idx -r scaffold_2497 | less -S
+```
+
+The 2d SFS file doesn't really have enough information to evaluate (just a string of numbers)
+
+*Here's my takeaway*
+When plotting in R, just remove all scaffolds <50kb in length
 
 #### Simple PCA
 

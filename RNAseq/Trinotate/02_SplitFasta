@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH --cpus-per-task=20
+#SBATCH --mem=64000                     # Memory requested
+#SBATCH --qos=normal
+#SBATCH --time=0-2:00:00
+#SBATCH --mail-type=ALL              # Type of email notification- BEGIN,END,FAIL,ALL
+#SBATCH --mail-user=eenbody@tulane.edu
+#SBATCH -e ./logs/splitfa.err           # File to which STDERR will be written
+#SBATCH -o ./logs/splitfa.out         # File to which STDOUT will be written
+#SBATCH -J splitfa    # Job name
+
+
+
+TRANS_DATA=/home/eenbody/Enbody_WD/WSFW_DDIG/RNAseq_WD/Guided_Trinity/trinity_gg/Trinity-GG.fasta
+WORK_D=/home/eenbody/RNAseq_WD/Trinotate
+
+cd $WORK_D
+
+Bioinformatics_Scripts/RNAseq/Trinotate/split_fasta.pl $TRANS_DATA $WORK_D/split_fasta/Trinity-GG_cdna.vol 50000
+Bioinformatics_Scripts/RNAseq/Trinotate/split_fasta.pl Trinity-GG.fasta.transdecoder.pep $WORK_D/split_fasta/Trinity-GG_pep.vol 50000

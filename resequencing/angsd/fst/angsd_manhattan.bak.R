@@ -8,10 +8,9 @@ library(dplyr)
 
 #########FOR RUNNING THIS ON CLUSTER
 option_list <- list(make_option(c('-i','--in_file'), action='store', type='character', default=NULL, help='Input file (output from ngsCovar)'),
-                    make_option(c('-c','--comp'), action='store', type='character', default=1-2, help='Components for title'),
+                    make_option(c('-c','--comp'), action='store', type='character', default=1-2, help='Components to plot'),
                     make_option(c('-a','--annot_file'), action='store', type='character', default=NULL, help='Annotation file with individual classification (2 column TSV with ID and ANNOTATION)'),
-                    make_option(c('-o','--out_file'), action='store', type='character', default=NULL, help='Output file'),
-                    make_option(c('-t','--file_type'),action='store', type='character', default=NULL, help='VCFTOOLS or ANGSD')
+                    make_option(c('-o','--out_file'), action='store', type='character', default=NULL, help='Output file')
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 
@@ -23,23 +22,11 @@ opt <- parse_args(OptionParser(option_list = option_list))
 #CHR=autosomes
 #Rscript ~/Bioinformatics_Scripts/resequencing/angsd/fst/angsd_manhattan.R -i Results/${POP1}_${POP2}_a.pbs.txt -c ${POP1}_${POP1}_${CHR}_NoCov -o Results/${POP1}_${POP2}_${CHR}.pdf
 
-if (opt$file_type == "ANGSD"){
+
 # Read input file
 pops <- read.table(opt$in_file, header=FALSE,row.names=NULL,skip=1)
 #pops <- read.table("data/angsd_fst/nocov_skiptri/test.txt", header=FALSE,row.names=NULL,skip=1) #test run
 colnames(pops)<-c("region","scaff","midPos","Nsites","fst")
-sl50<-read.table("/home/eenbody/reseq_WD/angsd/fst_angsd/autosome_scaffolds_gr_50000_head.txt",header=TRUE,row.names=NULL)
-pops<-merge(pops,sl50,all.x=FALSE,all.y=FALSE,by="scaff")
-}
-
-if (opt$file_type == "VCFTOOLS"){
-  # Read input file
-  pops <- read.table(opt$in_file, header=TRUE,row.names=NULL)
-  pops$midPos<-round((pops$BIN_START + pops$BIN_END)/2,0)
-  pops<-select(pops,BIN_START,CHROM,midPos,N_VARIANTS,WEIGHTED_FST)
-  colnames(pops)<-NULL
-  colnames(pops)<-c("region","scaff","midPos","Nsites","fst")
-}
 
 ####FIRST SETUP DEFAULT FST OUTPUT NO FILTERING#####
 #input for comp should be: aida_naimii_autosomes_misc
@@ -61,11 +48,9 @@ pops_df$zfst<-(pops_df$fst - mean(pops_df$fst))/sd(pops_df$fst)
 #####NEXT SETUP FILTERING####
 
 #Remove less than two windows per scaffold and less than 10 sites per window
-pops_dff<-pops_df[as.numeric(ave(pops_df$scaff_num, pops_df$scaff_num, FUN=length)) >= 2, ]
-
-#pops_dff<-pops_df %>% group_by(scaff_num) %>% filter(n() >= 2) #didnt work 
-#pops_dff<-pops_dff %>% group_by(Nsites) %>% filter(n() < 10) #didnt work
-titlef<-paste(comp[[1]][3],": ",comp[[1]][1]," vs. ",comp[[1]][2]," (",comp[[1]][4]," No scaffs<2 windows)",sep="")
+pops_dff<-pops_df %>% group_by(scaff_num) %>% filter(n() >= 2)
+pops_dff<-pops_dff %>% group_by(Nsites) %>% filter(n() < 10)
+titlef<-paste(comp[[1]][3],": ",comp[[1]][1]," vs. ",comp[[1]][2]," (",comp[[1]][4]," filtered)",sep="")
 
 ####CREATE PDF####
 

@@ -30,6 +30,18 @@ column -t #outputs a tsv file nicely (i.e. columns seperated nicely)
 
 To run something in the background, run it, then click `ctrl-z` then type `bg`, to check active jobs type `jobs`
 
+### Copy only a certain type of file using rsync
+https://stackoverflow.com/questions/11111562/rsync-copy-over-only-certain-types-of-files-using-include-option
+```
+cd /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/DNA/gatk_cluster_output
+rsync -zarvm --include="*/" --include="*.pdf" --exclude="*" cyp:/home/eenbody/reseq_WD/GATK_Haplotype_Caller/fst_vcftools .
+
+#or
+cd /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/DNA/angsd_cluster_output/fst_angsd
+rsync -zarvm --include="*/" --include="*.pdf" --exclude="*" cyp:/home/eenbody/reseq_WD/angsd/fst_angsd/fst_actual_analysis .
+
+```
+
 #### Change file extensions
 I kinda messed them up at one point, so it is helpful to change extensions to simplify.
 ```

@@ -1,5 +1,8 @@
 ### WSFW: RNAseq preprocessing overview
 
+Mostly following:
+https://informatics.fas.harvard.edu/best-practices-for-de-novo-transcriptome-assembly-with-trinity.html
+
 #### Merge fastq
 I ran one lane of nextseq, then adjusted volume of each sample based on the read depth for each sample. Then I ran the second lane of nextseq.
 

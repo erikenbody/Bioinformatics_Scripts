@@ -44,22 +44,22 @@ OUT=filtered_vcfs
 #badMap = For SNPs: filter out MQ < 40.0 and MQRS <-12.5
 #THESE ARE THE DEFAULT VALUES. However, I checked the INFO files output from VCFINFO and they seem pretty much fine for my dataset. At least, no glaring differences.
 
-# java -Xmx16g -XX:ParallelGCThreads=1 -jar ~/BI_software/GenomeAnalysisTK.jar \
-# -T VariantFiltration \
-# -nt 20 \
-# -R $REF \
-# --variant $SAMPLEDIR/All_WSFW.vcf.gz \
-# --filterExpression "vc.hasAttribute('DP') && DP < 2.8" \
-# --filterName "MinCov" \
-# --filterExpression "vc.hasAttribute('DP') && DP > 11.4" \
-# --filterName "MaxCov" \
-# --filterExpression "(vc.isSNP() && (vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -8.0)) || ((vc.isIndel() || vc.isMixed()) && (vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -20.0)) || (vc.hasAttribute('QD') && QD < 2.0) " \
-# --filterName "badSeq" \
-# --filterExpression "(vc.isSNP() && ((vc.hasAttribute('FS') && FS > 60.0) || (vc.hasAttribute('SOR') && SOR > 3.0))) || ((vc.isIndel() || vc.isMixed()) && ((vc.hasAttribute('FS') && FS > 200.0) || (vc.hasAttribute('SOR') && SOR > 10.0)))" \
-# --filterName "badStrand" \
-# --filterExpression "vc.isSNP() && ((vc.hasAttribute('MQ') && MQ < 40.0) || (vc.hasAttribute('MQRankSum') && MQRankSum < -12.5))" \
-# --filterName "badMap" \
-# -o $OUT/All_WSFW_fil.vcf
+java -Xmx16g -XX:ParallelGCThreads=1 -jar ~/BI_software/GenomeAnalysisTK.jar \
+-T VariantFiltration \
+-nt 20 \
+-R $REF \
+--variant $SAMPLEDIR/All_WSFW.vcf.gz \
+--filterExpression "vc.hasAttribute('DP') && DP < 2.8" \
+--filterName "MinCov" \
+--filterExpression "vc.hasAttribute('DP') && DP > 11.4" \
+--filterName "MaxCov" \
+--filterExpression "(vc.isSNP() && (vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -8.0)) || ((vc.isIndel() || vc.isMixed()) && (vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -20.0)) || (vc.hasAttribute('QD') && QD < 2.0) " \
+--filterName "badSeq" \
+--filterExpression "(vc.isSNP() && ((vc.hasAttribute('FS') && FS > 60.0) || (vc.hasAttribute('SOR') && SOR > 3.0))) || ((vc.isIndel() || vc.isMixed()) && ((vc.hasAttribute('FS') && FS > 200.0) || (vc.hasAttribute('SOR') && SOR > 10.0)))" \
+--filterName "badStrand" \
+--filterExpression "vc.isSNP() && ((vc.hasAttribute('MQ') && MQ < 40.0) || (vc.hasAttribute('MQRankSum') && MQRankSum < -12.5))" \
+--filterName "badMap" \
+-o $OUT/All_WSFW_fil.vcf
 
 #check SOR
 
@@ -89,8 +89,6 @@ OUT=filtered_vcfs
 #vcftools --vcf $OUT/All_WSFW_passed_fil_NoCov.vcf --min-alleles 2 --max-alleles 2 --maf 0.1 --max-missing 0.2 --min-meanDP 2.0 --max-meanDP 50.0 --out $OUT/filtered_vcfs/All_WSFW_passed_fil_NoCov_BA_VCF_depthfil.vcf
 #this will filter non biallelic sites on the already depth filtered one
 #vcftools --vcf $OUT/All_WSFW_passed_fil.vcf --min-alleles 2 --max-alleles 2 --maf 0.1 --max-missing 0.2 --out $OUT/All_WSFW_passed_fil_BA.vcf
-
-vcftools --vcf $OUT/All_WSFW_fil.vcf --min-alleles 2 --max-alleles 2 --maf 0.1 --max-missing 0.2 --remove-filtered badSeq --remove-filtered badStramd --remove-filtered badMap --recode --recode-INFO-all --stdout | gzip -c > $OUT/All_WSFW_passed.vcf.gz
 
 
 #-restrictAllelesTo MULTIALLELIC #could use this to filter out things not biallelic

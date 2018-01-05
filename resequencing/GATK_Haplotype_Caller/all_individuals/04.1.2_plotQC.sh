@@ -13,7 +13,7 @@
 module load R/3.4.1-intel
 export R_LIBS_USER=/home/eenbody/BI_software/R/Library:$R_LIBS_USER
 
-WORK_D=/home/eenbody/reseq_WD/GATK_Haplotype_Caller/all_individuals/seperate_snps_indels
+WORK_D=/home/eenbody/reseq_WD/GATK_Haplotype_Caller/all_individuals/04_seperate_snps_indels
 
 cd $WORK_D
 

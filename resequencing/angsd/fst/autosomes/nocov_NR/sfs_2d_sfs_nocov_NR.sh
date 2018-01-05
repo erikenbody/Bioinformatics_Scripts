@@ -43,28 +43,28 @@ POP4=moretoni
 CHR=autosomes
 
 #make soft link for lorentzi and naimii
-# cd Results
-# ln -s $OTHER_D/Results/${POP2}.${RUN}.ref.saf.idx .
-# ln -s $OTHER_D/Results/${POP2}.${RUN}.ref.saf.gz .
-# ln -s $OTHER_D/Results/${POP2}.${RUN}.ref.saf.pos.gz .
-# ln -s $OTHER_D/Results/${POP3}.${RUN}.ref.saf.idx .
-# ln -s $OTHER_D/Results/${POP3}.${RUN}.ref.saf.gz .
-# ln -s $OTHER_D/Results/${POP3}.${RUN}.ref.saf.pos.gz .
-# ln -s $OTHER_D/Results/${POP2}_${POP3}.sfs .
-# ln -s $OTHER_D/Results/${POP2}_${POP3}.pbs* .
-# cd ..
-#
-# for POP in aida moretoni
-# do
-#   echo $POP
-#   MININD=$(if [[ "$POP" == "aida-more" ]]; then echo 8; elif [[ "$POP" == "lorentzi" ]]; then echo 5; elif [[ "$POP" == "naimii" ]]; then echo 4; elif [[ "$POP" == "aida" ]]; then echo 3; elif [[ "$POP" == "moretoni" ]]; then echo 5; fi)
-#   BAMLIST=$HOME_D/${POP}_bamlist_NR.txt
-#   angsd -b $BAMLIST -ref $REFGENOME -anc $REFGENOME -out Results/${POP}.${RUN}.ref -rf $REGIONS -P 20\
-#                 -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 0 -trim 0 \
-#                 -minMapQ 20 -minQ 20 -minInd $MININD -doCounts 1 \
-#                 -GL 1 -doSaf 1
-#   realSFS Results/${POP}.${RUN}.ref.saf.idx -P 20 > Results/${POP}.${RUN}.ref.sfs
-# done
+cd Results
+ln -s $OTHER_D/Results/${POP2}.${RUN}.ref.saf.idx .
+ln -s $OTHER_D/Results/${POP2}.${RUN}.ref.saf.gz .
+ln -s $OTHER_D/Results/${POP2}.${RUN}.ref.saf.pos.gz .
+ln -s $OTHER_D/Results/${POP3}.${RUN}.ref.saf.idx .
+ln -s $OTHER_D/Results/${POP3}.${RUN}.ref.saf.gz .
+ln -s $OTHER_D/Results/${POP3}.${RUN}.ref.saf.pos.gz .
+ln -s $OTHER_D/Results/${POP2}_${POP3}.sfs .
+ln -s $OTHER_D/Results/${POP2}_${POP3}.pbs* .
+cd ..
+
+for POP in aida moretoni
+do
+  echo $POP
+  MININD=$(if [[ "$POP" == "aida-more" ]]; then echo 8; elif [[ "$POP" == "lorentzi" ]]; then echo 5; elif [[ "$POP" == "naimii" ]]; then echo 4; elif [[ "$POP" == "aida" ]]; then echo 3; elif [[ "$POP" == "moretoni" ]]; then echo 5; fi)
+  BAMLIST=$HOME_D/${POP}_bamlist_NR.txt
+  angsd -b $BAMLIST -ref $REFGENOME -anc $REFGENOME -out Results/${POP}.${RUN}.ref -rf $REGIONS -P 20\
+                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 0 -trim 0 \
+                -minMapQ 20 -minQ 20 -minInd $MININD -doCounts 1 \
+                -GL 1 -doSaf 1
+  realSFS Results/${POP}.${RUN}.ref.saf.idx -P 20 > Results/${POP}.${RUN}.ref.sfs
+done
 
 #SFS for all between pop comparisons
 realSFS -P 20 Results/${POP1}.${RUN}.ref.saf.idx Results/${POP2}.${RUN}.ref.saf.idx > Results/${POP1}_${POP2}.sfs

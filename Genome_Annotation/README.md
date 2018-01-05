@@ -499,6 +499,8 @@ Make sure to run:
 bin/generate-names.pl --verbose --out data/json/wsfw_maker
 ```
 
+
+
 ##### Functional annotation
 Useful starting point:
 https://scilifelab.github.io/courses/annotation/2016/practical_session/ExerciseFuncAnnotInterp
@@ -518,8 +520,16 @@ Also tips here (found this later, seems to be same as above):
 https://github.com/ebi-pf-team/interproscan/wiki/Interproscan5_24_63_ReleaseNotes
 
 
+Later, adding in ipr data. From this link:
+http://gmod.org/wiki/JBrowse_FAQ#How_do_I_setup_a_GFF_track.3F
+```
+cd /Library/WebServer/Documents/jbrowse/JBrowse-1.12.3rc2
+bin/flatfile-to-json.pl --gff /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/Reference_Genome_Annotation/visible_iprscan_domains.gff -o data/json/wsfw_maker/ --tracklabel ipr
+```
+
 ##### Blast
 `blastp_func.sh`
+*about 2.5 hours with swissprot only*
 
 This will blast all the protein sequences against the uniprot database.
 
@@ -537,21 +547,76 @@ makeblastdb -in uniprot_${RELEASE}.fasta -out uniprot_${RELEASE} -dbtype prot -p
 
 To run blast on the maker protein file, run `blastp_func.sh`. Key is to first make database (which, with the uniprot/swissprot combined) generates a lot of files so I put in a subdirectory. Be careful with what you name the database when making it, because you enter this exactly when running blastp. So if db name is WSFW_db, dont put the .fasta extension of the main file. Look at my shell script as an example if you get this error.
 
-For checking progress, got some tips here:
+For checking progress, got some tips here (but it didnt work so ignore):
 https://www.biostars.org/p/16471/
 
-Had to make some edits to their suggestions. I ran (at 9:15am on Dec 19):
+This timed out after 7 days and there doesn't seem to be a way to restart. Should have split it into multiple chunks.
+
+I reran with just swissprot. Which took only about 2hr.
+
+
+#### Annie
+
+Annie is nice for connecting the gene names with Blast and IPR output. Maybe not totally necessary, but I think it is going to be really helpful.
+
+Trying to add this with Annie:
+
 ```
-cat uniprot_2017_11.fasta | wc -l
->705441742
-tail -1 WSFW_maker_blast.out | cut -f 2 > lastqueryblasted
-cat lastqueryblasted
->A0A1D5P3P8
-grep -n -f lastqueryblasted uniprot_2017_11.fasta
->690060706:>tr|A0A1D5P3P8|A0A1D5P3P8_CHICK ADAM metallopeptidase with thrombospondin type 1 motif 4 OS=Gallus gallus GN=LOC100858999 PE=4 SV=1
-echo "(690060706 / 705441742) *100" | bc -l
->97.81965893365011564600
+module load anaconda3
+~/BI_software/Annie/annie.py -h
+cd /home/eenbody/WSFW_assembly_maker2.maker.output/functional_annotation
+
+~/BI_software/Annie/annie.py -b WSFW_maker_blast_sprot.out -db sp_db/uniprot_sprot.fasta -ipr interproscan_all/WSFW_assembly_maker2.all.maker.proteins.fasta.tsv -g maker_functional_final_output/WSFW_assembly_maker2.all.gff -o maker_functional_final_output/test.annie
 ```
+
+Totally failed. After some head scratching and digging into the source code, it is clear that the maker gff that we renamed earlier had a trailing comma added to each line that messed up the Annie parser. Here is how I fixed that:
+
+```
+sed 's/;$//' WSFW.genome.orig.gff > WSFW.maker2_nosemi_orig.gff
+sed 's/;$//' WSFW.maker2_renamed.gff> WSFW.maker2_renamed_nosemi.gff
+
+
+~/BI_software/Annie/annie.py -b WSFW_maker_blast_sprot.out -db sp_db/uniprot_sprot.fasta -ipr interproscan_all/WSFW_assembly_maker2.all.maker.proteins.fasta.tsv -g maker_functional_final_output/WSFW.maker2_renamed_nosemi.gff -o maker_functional_final_output/WSFW_maker_ipr_blast.annie
+```
+
+This led to another problem. My blast output is in the wrong format. Problem is that my blast output format is:
+```
+WSFW012016-RA	Q6D409	24.000	150	95	2	470	614	23	158	2.3	35.0
+```
+But needs to be:
+```
+WSFW012016-RA	sp|Q6D409|HIS7_PECAS	24.000	150	95	2	470	614	23	158	2.3	35.0
+```
+
+**THE PROBLEM WAS I CREATED MY DATABASE WITH THE FLAG -PARSE-SEQS, WHICH GETS RID OF THOSE PIPED SEQID PARTS.**
+
+The solution was to simply recreate my blastdb using the script in:
+`blastp_func_SwssProtOnly_noParse.sh`. In this script, I do not include the flag. This should solve the problem with Annie and possibly the maker functional annotation as well.
+
+Then run Annie:
+
+```
+~/BI_software/Annie/annie.py -b WSFW_maker_blast_sprot_np.out -db sp_db_np/uniprot_sprot.fasta -ipr interproscan_all/WSFW_assembly_maker2.all.maker.proteins.fasta.tsv -g ../WSFW.maker2_renamed_nosemi.gff -o maker_functional_final_output/WSFW_maker_ipr_blast.annie
+```
+
+Finally - success!
+
+##### Functional annotation to gff
+`add_blastp_ipr_to_maker.sh`
+*can just be run in idev or normal, only takes ~ 3min*
+
+This worked once I correctly ran blast without -parse_seqids and after removing trailing semi colon from the renamed maker .gff.
+
+##### Add functional annotation to jbrowse
+
+Only done with ipr so far
+
+```
+cd /Library/WebServer/Documents/jbrowse/JBrowse-1.12.3rc2
+bin/flatfile-to-json.pl --gff /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/Reference_Genome_Annotation/WSFW_annot_renamed_ipr_blast.gff -o data/json/wsfw_maker/ --tracklabel ipr
+```
+
+
 
 ##### Appendix: Proteins
 SS downloaded proteins from a ton of species. Guess I will do that. He didn't use EST from ZEFI, but I cant imagine it would hurt to include those. Here are the commands I ran:
