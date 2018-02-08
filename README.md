@@ -39,6 +39,11 @@ rsync -zarvm --include="*/" --include="*.pdf" --exclude="*" cyp:/home/eenbody/re
 #or
 cd /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/DNA/angsd_cluster_output/fst_angsd
 rsync -zarvm --include="*/" --include="*.pdf" --exclude="*" cyp:/home/eenbody/reseq_WD/angsd/fst_angsd/fst_actual_analysis .
+rsync -zarvm --include="*/" --include="*.fst.txt" --exclude="*" cyp:/home/eenbody/reseq_WD/angsd/fst_angsd/fst_actual_analysis .
+rsync -zarvm --include="*/" --include="*.csv" --exclude="*" cyp:/home/eenbody/reseq_WD/angsd/fst_angsd/fst_actual_analysis .
+
+cd /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/DNA/phylotree_cluster_output/
+rsync -zarvm --include="*/" --include="*.pdf" --exclude="*" cyp:/home/eenbody/reseq_WD/phylotree/for_plink/Results_treemix .
 
 ```
 

@@ -11,7 +11,7 @@
 #SBATCH --mail-type=ALL              # Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mail-user=eenbody@tulane.edu # Email to send notifications to
 
-#SUBMIT FROM $TOP
+#SUBMIT FROM $TOP##
 
 if [ -d "logs" ]; then echo "dir exists" ; else mkdir logs; fi
 

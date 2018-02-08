@@ -2,8 +2,8 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --time=0-23:00:00
-#SBATCH -e sepsexchr.err            # File to which STDERR will be written
-#SBATCH -o sepsexchr.out           # File to which STDOUT will be written
+#SBATCH -e sepsexchr2.err            # File to which STDERR will be written
+#SBATCH -o sepsexchr2.out           # File to which STDOUT will be written
 #SBATCH -J sepsexchr           # Job name
 #SBATCH --mem=64000
 #SBATCH --qos=normal
@@ -33,7 +33,13 @@ if [ -d "autosomes" ]; then echo "dir exists" ; else mkdir autosomes; fi
 # bcftools view -R z_scaffolds.bed -o zchr/Z_WSFW_passed.vcf All_WSFW_passed.vcf.gz
 # bcftools view -R autosome_scaffolds.bed -o autosomes/autosomes_WSFW_passed.vcf All_WSFW_passed.vcf.gz
 
-bgzip All_WSFW_fil.vcf
-tabix All_WSFW_fil.vcf.gz
-bcftools view -R z_scaffolds.bed -o zchr/Z_WSFW_fil.vcf.gz -O z All_WSFW_fil.vcf.gz
-bcftools view -R autosome_scaffolds.bed -o autosomes/autosomes_WSFW_fil.vcf.gz -O z All_WSFW_fil.vcf.gz
+#bgzip All_WSFW_fil.vcf
+#tabix All_WSFW_fil.vcf.gz
+#bcftools view -R z_scaffolds.bed -o zchr/Z_WSFW_fil.vcf.gz -O z All_WSFW_fil.vcf.gz
+#bcftools view -R autosome_scaffolds.bed -o autosomes/autosomes_WSFW_fil.vcf.gz -O z All_WSFW_fil.vcf.gz
+
+#gunzip All_WSFW_passed_CovFil_2.26_9.04.vcf.gz
+#bgzip All_WSFW_passed_CovFil_2.26_9.04.vcf
+#tabix All_WSFW_passed_CovFil_2.26_9.04.vcf.gz
+bcftools view -R z_scaffolds.bed -o zchr/Z_WSFW_CovFil_2.26_9.04.vcf.gz -O z All_WSFW_passed_CovFil_2.26_9.04.vcf.gz
+bcftools view -R autosome_scaffolds.bed -o autosomes/autosomes_WSFW_CovFil_2.26_9.04.vcf.gz -O z All_WSFW_passed_CovFil_2.26_9.04.vcf.gz

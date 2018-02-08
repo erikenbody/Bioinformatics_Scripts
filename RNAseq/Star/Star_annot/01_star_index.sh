@@ -12,12 +12,13 @@
 
 module load star/2.5.2a
 
-WORK_D=/home/eenbody/RNAseq_WD/Star/Star_annot
+WORK_D=/home/eenbody/RNAseq_WD/Star/Star_annot_gene_names
 cd $WORK_D
 
-GDIR=/lustre/project/jk/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW/STAR_sj_annot2
+GDIR=/lustre/project/jk/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW/STAR_sj_annot_gene_names
 REF=/lustre/project/jk/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW/WSFW_ref_final_assembly.fasta
 SJTAB=/lustre/project/jk/Enbody_WD/WSFW_DDIG/RNAseq_WD/Star/No_annot_Star/star_ref2_SJ.out.tab
-ANNOT=/home/eenbody/WSFW_assembly_maker2.maker.output/functional_annotation/maker_functional_final_output/WSFW_annot_renamed_ipr.gff
+ANNOT=/home/eenbody/WSFW_assembly_maker2.maker.output/functional_annotation/maker_functional_final_output/STAR_wsfw_maker_renamed_nosemi_blast_ipr.gff
 
-STAR --runThreadN 20 --runMode genomeGenerate --genomeDir $GDIR --genomeFastaFiles $REF --sjdbFileChrStartEnd $SJTAB --sjdbGTFfile $ANNOT --sjdbGTFtagExonParentTranscript Parent --sjdbGTFtagExonParentGene ID
+#after adding on "Name" as gene name attribute
+STAR --runThreadN 20 --runMode genomeGenerate --genomeDir $GDIR --genomeFastaFiles $REF --sjdbFileChrStartEnd $SJTAB --sjdbGTFfile $ANNOT --sjdbGTFtagExonParentTranscript Parent --sjdbGTFtagExonParentGene Name --sjdbGTFfeatureExon exon

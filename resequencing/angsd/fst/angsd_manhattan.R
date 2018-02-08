@@ -1,10 +1,10 @@
 # Usage: Rscript -i infile.covar -c component1-component2 -a annotation.file -o outfile.eps
 
-library(methods)
-library(optparse)
-library(ggplot2)
-library(qqman)
-library(dplyr)
+suppressMessages(library(methods))
+suppressMessages(library(optparse))
+suppressMessages(library(ggplot2))
+suppressMessages(library(qqman))
+suppressMessages(library(dplyr))
 
 #########FOR RUNNING THIS ON CLUSTER
 option_list <- list(make_option(c('-i','--in_file'), action='store', type='character', default=NULL, help='Input file (output from ngsCovar)'),
@@ -63,19 +63,17 @@ pops_df$zfst<-(pops_df$fst - mean(pops_df$fst))/sd(pops_df$fst)
 #Remove less than two windows per scaffold and less than 10 sites per window
 pops_dff<-pops_df[as.numeric(ave(pops_df$scaff_num, pops_df$scaff_num, FUN=length)) >= 2, ]
 
-#pops_dff<-pops_df %>% group_by(scaff_num) %>% filter(n() >= 2) #didnt work 
+#pops_dff<-pops_df %>% group_by(scaff_num) %>% filter(n() >= 2) #didnt work
 #pops_dff<-pops_dff %>% group_by(Nsites) %>% filter(n() < 10) #didnt work
 titlef<-paste(comp[[1]][3],": ",comp[[1]][1]," vs. ",comp[[1]][2]," (",comp[[1]][4]," No scaffs<2 windows)",sep="")
 
 ####CREATE PDF####
 
-pdf(opt$out_file,height=11,width=8.5)
+pdf(opt$out_file,height=8.5,width=11)
 #pdf("output/test7.pdf",height=11,width=8.5) #for testing purposes
-par(mfrow = c(4,1))
-manhattan(pops_df, chr="scaff_num",bp="midPos",p='fst',logp=FALSE,ylab="Fst",xlab="Scaffold", cex=0.3, main=title, suggestiveline = FALSE,genomewideline=FALSE)
-manhattan(pops_df, chr="scaff_num",bp="midPos",p='zfst',logp=FALSE,ylab="ZFst",xlab="Scaffold", cex=0.3, main=title, suggestiveline = FALSE,genomewideline=FALSE)
-manhattan(pops_dff, chr="scaff_num",bp="midPos",p='fst',logp=FALSE,ylab="Fst",xlab="Scaffold", cex=0.3, main=titlef, suggestiveline = FALSE,genomewideline=FALSE)
-manhattan(pops_dff, chr="scaff_num",bp="midPos",p='zfst',logp=FALSE,ylab="ZFst",xlab="Scaffold", cex=0.3, main=titlef, suggestiveline = FALSE,genomewideline=FALSE)
+par(mfrow = c(2,1))
+#manhattan(pops_df, chr="scaff_num",bp="midPos",p='fst',logp=FALSE,ylab="Fst",xlab="Scaffold", cex=0.3, main=title, suggestiveline = FALSE,genomewideline=FALSE)
+#manhattan(pops_df, chr="scaff_num",bp="midPos",p='zfst',logp=FALSE,ylab="ZFst",xlab="Scaffold", cex=0.3, main=title, suggestiveline = FALSE,genomewideline=FALSE)
+manhattan(pops_dff, chr="scaff_num",bp="midPos",p='fst',logp=FALSE,ylab="Fst",xlab="Scaffold", cex=0.3, main=titlef, suggestiveline=quantile(pops_dff$fst,0.99)[[1]],genomewideline=quantile(pops_dff$fst,0.999)[[1]])
+manhattan(pops_dff, chr="scaff_num",bp="midPos",p='zfst',logp=FALSE,ylab="ZFst",xlab="Scaffold", cex=0.3, main=titlef, suggestiveline=quantile(pops_dff$zfst,0.99)[[1]],genomewideline=quantile(pops_dff$zfst,0.999)[[1]])
 dev.off()
-
-

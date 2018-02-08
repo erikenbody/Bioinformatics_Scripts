@@ -173,6 +173,24 @@ After filtering, kept 15158456 out of a possible 981677731 Sites
 Run Time = 9156.00 seconds
 ```
 
+So I was using incorrect filtering values. It should have been per individual. 2.26-9.04 is what I should have done. These values make more sense. Results:
+```
+Parameters as interpreted:
+	--gzvcf filtered_vcfs/All_WSFW_passed.vcf.gz
+	--recode-INFO-all
+	--max-meanDP 9.04
+	--min-meanDP 2.26
+	--recode
+	--stdout
+
+Using zlib version: 1.2.8
+After filtering, kept 37 out of 37 Individuals
+Outputting VCF file...
+After filtering, kept 14576179 out of a possible 16149683 Sites
+Run Time = 2466.00 seconds
+```
+
+
 ### Subset ZChrom and autosome scaffolds from VCF
 This was seriously annoying to figure out how to do. I am not sure if others just subset out sex chromosomes earlier? Or what. But here is the only way I could reliably figured this out. I tried several methods using bedtools, tabix, vcftools, and bcftools. The last was the only one that worked for this purpose.
 
@@ -226,6 +244,13 @@ vcftools --gzvcf All_WSFW_passed.vcf.gz --exclude-positions autosome_scaffolds.b
 ```
 
 Notes 20 dec. Graphs are much more sparse, noisier than ANGSD. Similar peaks in general. Overall higher FST? Can quantify this. Consider checking angsd output when you dont include step. Also figure out what step means. Could influence somehow. Need to investiage scaffold #s in the thousands on the ANGSD plots. Why arent these in the GATK plots?
+
+#### Subset by population
+`08_make_pop_files.sh`
+
+To bring a vcf file into ANGSD, it seems like all filtering and subsetting should be done in advance. This is because ANGSD doesnt accept all commands when importing genotype likelihoods from a VCF file. So I made the separate chromosome file in step 7, then here I make a separate file for each population to bring into angsd. 
+
+
 
 #### Coverage Calculated by GATK
 `gatk_coverage.sh`

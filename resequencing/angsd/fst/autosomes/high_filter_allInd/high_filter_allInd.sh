@@ -36,7 +36,7 @@ do
  BAMLIST=$HOME_D/${POP}_bamlist.txt
  angsd -b $BAMLIST -ref $REFGENOME -anc $REFGENOME -out Results/${POP}.${RUN}_${DESCRIPTION}.ref -rf $REGIONS -P 20 \
                -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 0 -trim 0 \
-               -minMapQ 20 -minQ 20 -setMinDepth 2.26 -setMaxDepth 9.04 -SNP_pval 1e-6 -minInd $MININD -minMaf 0.01 \
+               -minMapQ 20 -minQ 20 -SNP_pval 1e-6 -minInd $MININD -minMaf 0.01 \
                -doCounts 1 \
                -doMaf 1 -doMajorMinor 1 -GL 1 -doSaf 1
 done

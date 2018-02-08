@@ -1,0 +1,35 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH -e angsds4dxy2.err            # File to which STDERR will be written
+#SBATCH -o angsds4dxy2.out           # File to which STDOUT will be written
+#SBATCH -J angsds4dxy2           # Job name
+#SBATCH --mail-type=ALL              # Type of email notification- BEGIN,END,FAIL,ALL
+#SBATCH --mem=64000
+#SBATCH --cpus-per-task=20
+#SBATCH --time=0-23:00:00              # Runtime in D-HH:MM:SS
+#SBATCH --qos=normal
+#SBATCH --mail-user=eenbody@tulane.edu # Email to send notifications to
+#
+module load zlib/1.2.8
+module load xz/5.2.2
+
+#variables
+HOME_D=/home/eenbody/reseq_WD/angsd/fst_angsd
+WORK_D=/home/eenbody/reseq_WD/angsd/dxy
+REFGENOME=/home/eenbody/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW/WSFW_ref_final_assembly.fasta
+ANC=/home/eenbody/reseq_WD/phylotree/Results/rbfw_correct.fasta
+RUN=autosome_scaffolds
+REGIONS=$HOME_D/${RUN}.txt
+N_samp=32
+
+cd $WORK_D
+
+angsd -bam $HOME_D/aida_naimii_bamlist_NR.txt -ref $REFGENOME -anc $ANC -rf $REGIONS -uniqueOnly 1 -P 20 \
+-remove_bads 1 -trim 0 -minMapQ 20 -minQ 20 -minMaf 0.01 -only_proper_pairs 0 -minInd 6 \
+-out aida_naimii -doCounts 1 -doMaf 2 -doMajorMinor 4 \
+-GL 1 -skipTriallelic 1 -SNP_pval 1e-6
+
+gunzip -c aida_naimii.mafs.gz aida_naimii.mafs
+sed '1d' aida_naimii.mafs > aida_naimii_NH.mafs
+angsd sites index aida_naimii_NH.mafs

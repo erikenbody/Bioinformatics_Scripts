@@ -363,6 +363,9 @@ trna=1 #find tRNAs with tRNAscan, 1 = yes, 0 = no
 ###### Run time
 The second Maker run ran on 18 cores using MPICH MPI and failed after 23:33, which is strangely close to the 24 hour limit. I then ran it again, and it failed after 12 minutes. I ran on one node with 20 processors and it failed in 1hr 22min. The error code was strange, but with the Cypress admin helped I found it was related to MPICH. I ran on one core without multiple processors (-N 1 -n 1) and Maker finished in 1 day, 15hours.
 
+**I eventually discovered that (on the maker-devel somewhere) other users reported this issue. The key seems to be that when the number of scaffolds fell below the number of cores (e.g. 20 scaffolds remaining, using 21 cores) then it crashed. They then had to run with less cores...this seems consistent with the issues I had were. Hard to say how to solve this, just makes the end of the run take longer**
+
+
 ###### Checking Maker run 2 output
 Output of log file says Maker finished. 4903 scaffolds listed as 'FINISHED'
 
@@ -601,6 +604,23 @@ Then run Annie:
 
 Finally - success!
 
+**Annie is also useful for checking number of genes in different filtering of blast**
+```
+awk '$11<0.01' WSFW_maker_blast_sprot_np.out > WSFW_maker_blast_sprot_np_0.01.out
+~/BI_software/Annie/annie.py -b WSFW_maker_blast_sprot_np_0.01.out -db sp_db_np/uniprot_sprot.fasta -g ../WSFW.maker2_renamed_nosemi.gff -o maker_functional_final_output/WSFW_maker_blast_0.01.annie
+awk '$2 == "name"' WSFW_maker_blast_0.01.annie | wc -l
+>19587
+
+awk '$11<1e-6' WSFW_maker_blast_sprot_np.out > WSFW_maker_blast_sprot_np_1e-6.out
+~/BI_software/Annie/annie.py -b WSFW_maker_blast_sprot_np_1e-6.out -db sp_db_np/uniprot_sprot.fasta -g ../WSFW.maker2_renamed_nosemi.gff -o maker_functional_final_output/WSFW_maker_blast_1e-6.annie
+awk '$2 == "name"' WSFW_maker_blast_1e-6.annie | wc -l
+>19360
+
+awk '$2 == "name"' WSFW_maker_ipr_blast.annie | wc -l
+>20898
+```
+
+
 ##### Functional annotation to gff
 `add_blastp_ipr_to_maker.sh`
 *can just be run in idev or normal, only takes ~ 3min*
@@ -616,6 +636,149 @@ cd /Library/WebServer/Documents/jbrowse/JBrowse-1.12.3rc2
 bin/flatfile-to-json.pl --gff /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/Reference_Genome_Annotation/WSFW_annot_renamed_ipr_blast.gff -o data/json/wsfw_maker/ --tracklabel ipr
 ```
 
+##### Subsetting for testing
+
+```
+FASTASUB=/lustre/project/jk/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW/fasta_subsets
+seqtk seq ../WSFW_ref_final_assembly.fasta | grep -A 1 -w -E 'scaffold_(0|135|297|312|313|335|393)' > aida_naimii_99.9.fasta
+GFFSUB=/home/eenbody/WSFW_assembly_maker2.maker.output/functional_annotation/maker_functional_final_output/gff_subsets
+cat ../wsfw_maker_renamed_nosemi_blast_ipr.gff | grep -w -E '^scaffold_(0|135|297|312|313|335|393)' > aida_naimii_99.9.fasta
+
+#locally (copied files locally)
+cd /Library/WebServer/Documents/jbrowse/JBrowse-1.12.3rc2
+bin/prepare-refseqs.pl --out data/json/aida_naimii_99.9/ --fasta cyp_output/aida_naimii_99.9.fasta
+
+bin/maker2jbrowse cyp_output/aida_naimii_99.9.gff -o data/json/aida_naimii_99.9
+
+bin/generate-names.pl --verbose --out data/json/aida_naimii_99.9
+```
+
+visible at:
+http://localhost/jbrowse/JBrowse-1.12.3rc2/index.html?data=data/json/aida_naimii_99.9
+
+This worked well and shows the functional annotations, so I am going to go ahead and add all of the genome to jbrowse:
+```
+cd /Library/WebServer/Documents/jbrowse/JBrowse-1.12.3rc2
+
+bin/prepare-refseqs.pl --out data/json/wsfw_maker_func --fasta /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/Reference_Genome_Annotation/WSFW_ref_final_assembly.fasta
+
+bin/maker2jbrowse cyp_output/wsfw_maker_renamed_nosemi_blast_ipr.gff -o data/wsfw_maker_func ; bin/generate-names.pl --verbose --out data/json/wsfw_maker_func
+
+```
+
+
+
+FINAL ANNOTATED VISIBLE HERE:
+http://localhost/jbrowse/JBrowse-1.12.3rc2/index.html?data=data/json/wsfw_maker_func
+
+Doesnt have visible domains....great
+
+output generated when running maker2jbrowse and generate-names:
+```
+
+WARNING: No matching features found for expressed_sequence_match:tblastx
+Too many open files opening bucket log data/json/wsfw_maker_func/names/000/3a.json.log at /Library/WebServer/Documents/jbrowse/JBrowse-1.12.3rc2/bin/../src/perl5/Bio/JBrowse/HashStore.pm line 197.
+Tracks:
+    DNA
+    est_gff:tophat
+    tblastx
+    protein2genome
+    snap_masked
+    augustus_masked
+    repeatrunner
+    gene
+    est2genome
+    cdna2genome
+    blastn
+    maker
+    blastx
+    repeatmasker
+Sampled input stats:
+                   avg record text bytes 21
+        namerecs converted to operations 3880
+                       namerecs buffered 4903
+        operation stream estimated count 451196196
+           record stream estimated count 37599683
+                         operations made 50005
+                     total namerec bytes 102963
+                       total input bytes 789593357
+                      name input records 4903
+Removing existing contents of target dir data/json/wsfw_maker_func/names
+Hash store cache size: 2684 buckets
+Using 2 chars for sort log names (256 sort logs)
+Too many open files opening bucket log data/json/wsfw_maker_func/names/000/3a.json.log at /Library/WebServer/Documents/jbrowse/JBrowse-1.12.3rc2/bin/../src/perl5/Bio/JBrowse/HashStore.pm line 197.
+```
+
+ok take 2...
+
+```
+cd /Library/WebServer/Documents/jbrowse/JBrowse-1.12.3rc2
+mkdir data/json/fix_wsfw_maker_func
+
+bin/prepare-refseqs.pl --out data/json/fix_wsfw_maker_func --fasta /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/Reference_Genome_Annotation/WSFW_ref_final_assembly.fasta
+
+bin/maker2jbrowse cyp_output/wsfw_maker_renamed_nosemi_blast_ipr.gff -o data/json/fix_wsfw_maker_func
+
+bin/generate-names.pl --verbose --out data/json/fix_wsfw_maker_func
+
+```
+Output maker2jbrowse
+
+```
+WARNING: No matching features found for expressed_sequence_match:tblastx
+Can't use string ("137441843") as an ARRAY ref while "strict refs" in use at /Library/WebServer/Documents/jbrowse/JBrowse-1.12.3rc2/bin/../src/perl5/Bio/JBrowse/HashStore.pm line 227.
+```
+
+Output generate names:
+
+```
+Tracks:
+    DNA
+    maker
+    protein2genome
+    augustus_masked
+    blastn
+    snap_masked
+    cdna2genome
+    tblastx
+    blastx
+    repeatmasker
+    est2genome
+    est_gff:tophat
+    gene
+    repeatrunner
+Sampled input stats:
+        namerecs converted to operations 3880
+           record stream estimated count 37599683
+                      name input records 4903
+        operation stream estimated count 451196196
+                       namerecs buffered 4903
+                         operations made 50005
+                       total input bytes 789593357
+                     total namerec bytes 102963
+                   avg record text bytes 21
+Removing existing contents of target dir data/json/fix_wsfw_maker_func/names
+Hash store cache size: 2684 buckets
+Using 2 chars for sort log names (256 sort logs)
+______________________________________________________
+```
+
+http://localhost/jbrowse/JBrowse-1.12.3rc2/index.html?data=data/json/fix_wsfw_maker_func
+
+
+##### Concluding notes
+
+My maker run seems to have been fairly successful. It identified more genes than I expected (~18,000), which means that there is likely some overcalling happening. There is a good discussion of possible solutions here:
+http://gmod.827538.n3.nabble.com/Too-many-genes-td4056017.html
+
+TL;DR: Some manual curation of the gene models would likely be beneficial. Right now, this isn't really worth my time for what I need this annotation for. However, there are some genes that hit multiple gene models in my WSFW, which provides problems for downstream enrichment investigation. There were also some low quality functional calls using blast, because the default evalue is rather high. Above there is some text where I change this filter all the way down to 1e-6 (suggested by Carson in the link above), which results in ~1538 less genes. This is probably a good threshold to use for the annotations of my RNAseq and reseq datasets.
+
+Regardless, I still have some double hits which may be problematic. I 'bandaid' this problem by removing duplicated hits in enrichment analysis, but it is a bit problematic for genes that are significantly up or down regulated and will need to be addressed accordingly.
+
+Running proteinortho seems like a good idea to check specific genes that I investigate later. I already ran with swissprot, but probably smart to also run with specific species databases.  
+
+This annotation could be improved by some additiona quality filtering. See: http://www.yandell-lab.org/publications/pdf/maker_current_protocols.pdf
+Starting at 4.11.23. This would involve running MAKER round two with the option keep_preds=1 then run quality_filter.pl with IPR data. The end result would be rescuing some genes that Maker threw away as too low quality by noting they have IPR evidence with them. It sounds like this number would be relatively low, relative to the time it would take to re run this. In addition, it would not provide additional filtering - it would only result in more genes identified. 
 
 
 ##### Appendix: Proteins

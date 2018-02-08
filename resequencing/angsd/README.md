@@ -196,6 +196,40 @@ The 2d SFS file doesn't really have enough information to evaluate (just a strin
 *Here's my takeaway*
 When plotting in R, just remove all scaffolds <50kb in length
 
+#### WHAT FILES TO USE
+
+I've run:
+* autosomes and z chromosome
+* with (allInd) and without relatives (NR)
+* mid filter (nocov_skiptri is a typo, did not actually use skiptri) and high filter (which includes -maf and snp pvalue)
+* higher filter were depth coverages: `-setMinDepth 2.26 -setMaxDepth 9.04` and `-setMinDepth 83.66 -setMaxDepth 334.64` resulted in almost no sites
+* combined aida-more, which didnt really show anything informative.
+
+**Note that there are some man plots labeled as HighFilt for autosomes allindividuals that are just coverage filtered**
+
+In the end:
+Try just running the high filter (if I can get it right) and only do no relatives.
+
+jan 13:
+ANGSD:
+ALL INDIVIDUALS:
+* run 01.1_autosomes_fst_allInd_highFilt.sh DONE
+* run 02.2 genes in windows (autosomes high filt (angsd)) DONE
+
+NR:
+* run 01.2_autosomes_fst_HighFilt_NR.sh DONE
+* run 02.2 genes in windows DONE
+
+THEN SET UP NO RELATIVES FOR VCFTOOLS. Maybe only if time.
+
+Study gene network analyses
+
+To get this rysnc:
+```
+cd /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/DNA/angsd_cluster_output/fst_angsd
+rsync -zarvm --include="*/" --include="*.pdf" --exclude="*" cyp:/home/eenbody/reseq_WD/angsd/fst_angsd/fst_actual_analysis .
+```
+
 #### Simple PCA
 
 This is very simple PCA, without separating chromosomes
@@ -244,4 +278,17 @@ cat bam_list_file.txt | cut -d "_" -f 3 >> ssp_bam_list.txt #only keep ssp
 awk -v RS='' -v OFS='","' 'NF { $1 = $1; print "\"" $0 "\"" }' ssp_bam_list.txt >> ssp_bam_list_c.txt
 cp ssp_bam_list_c.txt ~/reseq_WD/angsd/angsd_pca/
 cd ~/reseq_WD/angsd/angsd_pca/
+```
+
+for no relatives
+```
+cd /home/eenbody/reseq_WD/angsd/angsd_pca_NR_auto/working_list
+cat allpops_bamlist_NR_file.txt | cut -d "_" -f 1,2 >> bam_list_file_ID.txt #only ID and band number
+awk -v RS='' -v OFS='","' 'NF { $1 = $1; print "\"" $0 "\"" }' bam_list_file_ID.txt >> bam_list_file_ID_c.txt #from link, make csv
+```
+
+Also need subspecies file in same same order
+```
+cat allpops_bamlist_NR_file.txt | cut -d "_" -f 3 >> ssp_bamlist_NR.txt #only keep ssp
+awk -v RS='' -v OFS='","' 'NF { $1 = $1; print "\"" $0 "\"" }' ssp_bamlist_NR.txt >> ssp_bamlist_NR_c.txt
 ```
