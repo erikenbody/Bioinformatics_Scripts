@@ -123,7 +123,12 @@ Can also be done in ANGSD. Follow suggestions from ngsTools. This will use SFS f
 $ANGSD/misc/realSFS fst index Results/moretoni.zchr_scaffolds.ref.saf.idx Results/lorentzi.zchr_scaffolds.ref.saf.idx Results/naimii.zchr_scaffolds.ref.saf.idx Results/aida.zchr_scaffolds.ref.saf.idx -sfs Results/moretoni.zchr_scaffolds.ref.sfs -sfs Results/lorentzi.zchr_scaffolds.ref.sfs -sfs Results/naimii.zchr_scaffolds.ref.sfs -sfs Results/aida.zchr_scaffolds.ref.sfs -fstout Results/WSFW.pbs -whichFST
 ```
 
+Get global estimate
+```
+realSFS fst stats aida_naimii.pbs.fst.idx > aida_naimii.pbs.fst.idx.global_fst
+```
 
+Not sure what filtering these values are from:
 | Populations        | Fst Unweighted    | Fst Weighted  |
 | ------------- |:-------------:| -----:|
 | aida vs naimii     | 0.030212 |   0.087849 |
@@ -132,6 +137,16 @@ $ANGSD/misc/realSFS fst index Results/moretoni.zchr_scaffolds.ref.saf.idx Result
 | moretoni vs lorentzi | 0.033237 | 0.310823 |
 | moretoni vs naimii |  0.031570     |  0.233177   |
 | naimii vs lorentzi | 0.032364      |  0.257469   |
+
+From no relatives, sensible:
+
+```
+cd /lustre/project/jk/Enbody_WD/WSFW_DDIG/reseq_WD/angsd/fst_angsd/fst_actual_analysis/no_relatives/autosome/NR_sensible
+realSFS fst stats aida_naimii_autosome_NR_sensible.fst.idx > aida_naimii.global_fst.txt
+-> FST.Unweight[nObs:5284777]:0.052722 Fst.Weight:0.069410
+realSFS fst stats lorentzi_moretoni_autosome_NR_sensible.fst.idx > lorentzi_moretoni.globla_fst.txt
+-> FST.Unweight[nObs:4939876]:0.153434 Fst.Weight:0.201952
+```
 
 #### Possible sliding window bug
 
@@ -229,6 +244,23 @@ To get this rysnc:
 cd /Users/erikenbody/Google_Drive/Tulane/WSFW_Data/Genomics_DNA_RNA/DNA/angsd_cluster_output/fst_angsd
 rsync -zarvm --include="*/" --include="*.pdf" --exclude="*" cyp:/home/eenbody/reseq_WD/angsd/fst_angsd/fst_actual_analysis .
 ```
+
+### Simple calculations
+
+use realSFS fst print to cat into an output. Then use this to find maximum Fst value.
+```
+awk 'BEGIN {max = 0} {if ($4>max) max=$4} END {print max}' aida_naimii_fst_OUT.txt
+```
+
+Summaries high vs mid for no relatives:
+```
+cat aida_naimii_fst_OUT.txt | wc -l
+>923749897
+cat ../NR-HighFilt/aida_naimii_autosome_NR-HighFilt_OUT.txt | wc -l
+>5734542
+```
+
+Why so many more from high filter?
 
 #### Simple PCA
 

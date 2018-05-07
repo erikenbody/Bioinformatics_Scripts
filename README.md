@@ -26,6 +26,7 @@ du #checks size of files use -b for byte calcs (more accurate?) and -h for human
 ln -s #make a soft link to a file or folder. I did this in my cypress home folder to my lustre working directory
 chmod +x #for giving yourself permission for a .sh file to run it
 column -t #outputs a tsv file nicely (i.e. columns seperated nicely)
+du -sch .[!.]* * |sort -h #outputs size of all hidden files (was nice for when I hit quota on home dir)
 ```
 
 To run something in the background, run it, then click `ctrl-z` then type `bg`, to check active jobs type `jobs`

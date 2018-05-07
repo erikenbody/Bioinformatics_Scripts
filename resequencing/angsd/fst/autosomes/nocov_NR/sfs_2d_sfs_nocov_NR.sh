@@ -96,6 +96,27 @@ realSFS fst stats2 Results/${POP2}_${POP3}.pbs.fst.idx -win $WINDOW -step $STEP 
 realSFS fst stats2 Results/${POP2}_${POP4}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/${POP2}_${POP4}_${SUBSET}.pbs.txt
 realSFS fst stats2 Results/${POP3}_${POP4}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/${POP3}_${POP4}_${SUBSET}.pbs.txt
 
+#no step - Mar9
+STEP=50000
+
+realSFS fst stats2 Results/${POP1}_${POP2}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP1}_${POP2}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP1}_${POP3}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP1}_${POP3}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP1}_${POP4}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP1}_${POP4}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP2}_${POP3}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP2}_${POP3}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP2}_${POP4}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP2}_${POP4}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP3}_${POP4}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP3}_${POP4}_${SUBSET}.pbs_NS.txt
+
+WINDOW=15000
+STEP=15000
+SUBSET=NR15kb
+realSFS fst stats2 Results/${POP1}_${POP2}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP1}_${POP2}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP1}_${POP3}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP1}_${POP3}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP1}_${POP4}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP1}_${POP4}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP2}_${POP3}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP2}_${POP3}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP2}_${POP4}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP2}_${POP4}_${SUBSET}.pbs_NS.txt
+realSFS fst stats2 Results/${POP3}_${POP4}.pbs.fst.idx -win $WINDOW -step $STEP -whichFST 0 > Results/NoStep/${POP3}_${POP4}_${SUBSET}.pbs_NS.txt
+
+
 #make manhattan plots - fst, zfst, filtered fst, filtered zfst
 Rscript ~/Bioinformatics_Scripts/resequencing/angsd/fst/angsd_manhattan.R -i Results/${POP1}_${POP2}_${SUBSET}.pbs.txt -c ${POP1}_${POP2}_${CHR}_${SUBSET} -o Results/ManPlots/${POP1}_${POP2}_${CHR}_${SUBSET}.pdf
 Rscript ~/Bioinformatics_Scripts/resequencing/angsd/fst/angsd_manhattan.R -i Results/${POP1}_${POP3}_${SUBSET}.pbs.txt -c ${POP1}_${POP3}_${CHR}_${SUBSET} -o Results/ManPlots/${POP1}_${POP3}_${CHR}_${SUBSET}.pdf

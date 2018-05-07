@@ -70,6 +70,15 @@ realSFS fst stats2 Results/${POP2}_${POP3}.pbs.fst.idx -win 50000 -step 10000 -w
 realSFS fst stats2 Results/${POP2}_${POP4}.pbs.fst.idx -win 50000 -step 10000 -whichFST 0 > Results/${POP2}_${POP4}_a.pbs.txt
 realSFS fst stats2 Results/${POP3}_${POP4}.pbs.fst.idx -win 50000 -step 10000 -whichFST 0 > Results/${POP3}_${POP4}_a.pbs.txt
 
+#no step - ran seperately 9mar18
+realSFS fst stats2 Results/${POP1}_${POP2}.pbs.fst.idx -win 50000 -step 50000 -whichFST 0 > Results/NoStep/${POP1}_${POP2}_a.pbs_NS.txt
+realSFS fst stats2 Results/${POP1}_${POP3}.pbs.fst.idx -win 50000 -step 50000 -whichFST 0 > Results/NoStep/${POP1}_${POP3}_a.pbs_NS.txt
+realSFS fst stats2 Results/${POP1}_${POP4}.pbs.fst.idx -win 50000 -step 50000 -whichFST 0 > Results/NoStep/${POP1}_${POP4}_a.pbs_NS.txt
+realSFS fst stats2 Results/${POP2}_${POP3}.pbs.fst.idx -win 50000 -step 50000 -whichFST 0 > Results/NoStep/${POP2}_${POP3}_a.pbs_NS.txt
+realSFS fst stats2 Results/${POP2}_${POP4}.pbs.fst.idx -win 50000 -step 50000 -whichFST 0 > Results/NoStep/${POP2}_${POP4}_a.pbs_NS.txt
+realSFS fst stats2 Results/${POP3}_${POP4}.pbs.fst.idx -win 50000 -step 50000 -whichFST 0 > Results/NoStep/${POP3}_${POP4}_a.pbs_NS.txt
+
+
 if [ -d "Results_whichFST1" ]; then echo "Results file exists" ; else mkdir Results_whichFST1; fi
 realSFS fst index Results_whichFST1/${POP1}.${RUN}.ref.saf.idx Results_whichFST1/${POP2}.${RUN}.ref.saf.idx -sfs Results_whichFST1/${POP1}_${POP2}.sfs -fstout Results_whichFST1/${POP1}_${POP2}.pbs -whichFST 1
 realSFS fst index Results_whichFST1/${POP1}.${RUN}.ref.saf.idx Results_whichFST1/${POP3}.${RUN}.ref.saf.idx -sfs Results_whichFST1/${POP1}_${POP3}.sfs -fstout Results_whichFST1/${POP1}_${POP3}.pbs -whichFST 1

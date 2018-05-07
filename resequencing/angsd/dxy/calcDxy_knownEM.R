@@ -7,7 +7,6 @@
 #                                       #
 #########################################
 #some edits by EDE for:
-#running with unknownEM
 #set outfile name
 
 # NOTES

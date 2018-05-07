@@ -8,6 +8,9 @@
 #SBATCH --mem=64000
 #SBATCH --mail-user=eenbody@tulane.edu # Email to send notifications to
 
+WORK_D=/home/eenbody/Enbody_WD/WSFW_DDIG/Raw_WSFW_WGS_name_fixed/merged_fastq
+cd $WORK_D
+
 #from: https://superuser.com/questions/947008/concatenate-csv-files-with-the-same-name-from-subdirectories
 ALLFILE=`
 for FILE in /home/eenbody/Enbody_WD/WSFW_DDIG/Raw_WSFW_WGS/WGS_Lane*/L*/Fastq/*.gz

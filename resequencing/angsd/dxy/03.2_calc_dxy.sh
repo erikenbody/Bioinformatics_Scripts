@@ -16,4 +16,5 @@ export R_LIBS_USER=/home/eenbody/BI_software/R/Library:$R_LIBS_USER
 
 
 #Rscript ~/Bioinformatics_Scripts/resequencing/angsd/dxy/calcDxy.R -p moretoni.mafs -q lorentzi.mafs
-Rscript ~/Bioinformatics_Scripts/resequencing/angsd/dxy/calcDxy_unknownEM.R -p moretoni.mafs -q lorentzi.mafs -o moretoni_lorentzi_dxy.txt
+#Rscript ~/Bioinformatics_Scripts/resequencing/angsd/dxy/calcDxy_unknownEM.R -p moretoni.mafs -q lorentzi.mafs -o moretoni_lorentzi_dxy.txt
+Rscript ~/Bioinformatics_Scripts/resequencing/angsd/dxy/calcDxy_knownEM.R -p moretoni.mafs -q lorentzi.mafs -o moretoni_lorentzi_dxy.txt
