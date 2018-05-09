@@ -11,8 +11,13 @@
 #SBATCH --qos=normal
 #SBATCH --mail-user=eenbody@tulane.edu # Email to send notifications to
 
+
+
 module load  mpich/3.1.4
 module load gcc/4.9.4
-/share/apps/mpich/3.1.4/bin/mpiexec -n 20 raxml-ng-mpi --msa wsfw_concatenated.fasta --model GTR+G --threads 20 --prefix concat_fasta2--bs-trees 100
+/share/apps/mpich/3.1.4/bin/mpiexec -n 20 raxml-ng-mpi --msa wsfw_concatenated.fasta --model GTR+G --threads 20 --prefix concat_fasta2 --bs-trees 100
 
-raxml-ng-mpi --msa RAxML_input.vcf --model GTR+G+ASC_LEWIS --threads 20 --prefix concat_fasta2--bs-trees 100
+
+
+#doesnt like vcf
+#raxml-ng-mpi --msa RAxML_input.vcf --model GTR+G+ASC_LEWIS --threads 20 --prefix vcf2tree --bs-trees 100
