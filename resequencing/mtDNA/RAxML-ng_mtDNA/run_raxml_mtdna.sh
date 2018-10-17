@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH -n 20
-#SBATCH -e run_RAxMLNG_restart2.err            # File to which STDERR will be written
-#SBATCH -o run_RAxMLNG_restart2.out           # File to which STDOUT will be written
+#SBATCH -e run_RAxMLNGmt.err            # File to which STDERR will be written
+#SBATCH -o run_RAxMLNGmt.out           # File to which STDOUT will be written
 #SBATCH -J run_RAxMLNG           # Job name
 #SBATCH --mail-type=ALL              # Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mem=128000
@@ -14,6 +14,8 @@ module load gcc/4.9.4
 
 #raxml-ng --msa wsfw_concatenated.fasta --model GTR+G --threads 20 --prefix concat_fasta_pthreads_NOASC --bs-trees 100
 
-cd /home/eenbody/reseq_WD/phylotree/RAxML-NG/snp_tree
+cd /home/eenbody/reseq_WD/mtDna/RAxML-ng_mtDNA
 
-raxml-ng --msa RAxML_input.phy.varsites.phy --all --model GTR+G+ASC_LEWIS --threads 20 --prefix RAxML_SNP_tree --bs-trees 100
+#only one thread needed
+#raxml-ng --msa wsfw_filtered_heavy_edit.phy --all --model GTR+G -prefix RAxML_mtDNA_tree --bs-trees 100
+raxml-ng --msa wsfw_og_filtered_heavy_edit_nogaps.phy --all --threads 1 --model GTR+G -prefix RAxML_mtDNA_tree_og_nogap --bs-trees 100

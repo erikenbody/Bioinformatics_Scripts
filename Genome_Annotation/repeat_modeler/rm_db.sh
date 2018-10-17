@@ -11,6 +11,7 @@
 module load anaconda
 source activate ede_py
 
+
 WORK_D=/home/eenbody/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW/Annotation
 REF=/home/eenbody/Enbody_WD/WSFW_DDIG/Reference_Genome_WSFW
 

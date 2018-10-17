@@ -3,7 +3,7 @@
 
 #### Pre Maker software
 
-#### RepeatModuler
+#### RepeatModeler
 `rm_db.sh`
 
 This is ridiculously difficult to install with a ton of dependencies.
@@ -231,7 +231,7 @@ ls -ort $AUGUSTUS_CONFIG_PATH/species/wsfw/
 #Now we make a first try and predict the genes in genes.gb.train ab initio.
 augustus --species=wsfw WSFW.gb.test | tee firsttest.out # takes ~1m
 
-#OUTPUT:
+#OUTPUT:  
 *******      Evaluation of gene prediction     *******
 
 ---------------------------------------------\
@@ -722,6 +722,7 @@ bin/maker2jbrowse cyp_output/wsfw_maker_renamed_nosemi_blast_ipr.gff -o data/jso
 bin/generate-names.pl --verbose --out data/json/fix_wsfw_maker_func
 
 ```
+
 Output maker2jbrowse
 
 ```
@@ -778,7 +779,7 @@ Regardless, I still have some double hits which may be problematic. I 'bandaid' 
 Running proteinortho seems like a good idea to check specific genes that I investigate later. I already ran with swissprot, but probably smart to also run with specific species databases.  
 
 This annotation could be improved by some additiona quality filtering. See: http://www.yandell-lab.org/publications/pdf/maker_current_protocols.pdf
-Starting at 4.11.23. This would involve running MAKER round two with the option keep_preds=1 then run quality_filter.pl with IPR data. The end result would be rescuing some genes that Maker threw away as too low quality by noting they have IPR evidence with them. It sounds like this number would be relatively low, relative to the time it would take to re run this. In addition, it would not provide additional filtering - it would only result in more genes identified. 
+Starting at 4.11.23. This would involve running MAKER round two with the option keep_preds=1 then run quality_filter.pl with IPR data. The end result would be rescuing some genes that Maker threw away as too low quality by noting they have IPR evidence with them. It sounds like this number would be relatively low, relative to the time it would take to re run this. In addition, it would not provide additional filtering - it would only result in more genes identified.
 
 
 ##### Appendix: Proteins

@@ -63,15 +63,28 @@ allfreq <- merge(allfreqA, allfreqB, by=c("chromo","position"))
 allfreq <- allfreq[order(allfreq$chromo, allfreq$position),]
 # -> Actual dxy calculation
 allfreq <- transform(allfreq, dxy=(knownEM.x*(1-knownEM.y))+(knownEM.y*(1-knownEM.x)))
-#allfreq <- transform(allfreq, dxy=(unknownEM.x*(1-unknownEM.y))+(unknownEM.y*(1-unknownEM.x)))
 
 
+##added by EDE
+library(windowscanr)
+library(dplyr)
+pos_win <- winScan(x = allfreq,
+                   groups = "chromo",
+                   position = "position",
+                   values = "dxy",
+                   win_size = 50000,
+                   win_step = 10000,
+                   funs = c("mean","sum"))
 
-write.table(allfreq[,c("chromo","position","dxy")], file=opt$out, quote=FALSE, row.names=FALSE, sep='\t')
+pos_win$dxy_rel<-pos_win$dxy_mean/pos_win$dxy_n
+pos_win$dxy_sumrel<-pos_win$dxy_sum/50000
+pos_win$scaff<-as.numeric(gsub("scaffold_","",pos_win$chromo))
+write.table(pos_win, file=paste(opt$out,"win","txt",sep="."),row.names=FALSE, quote=FALSE, sep='\t')
+
+write.table(allfreq[,c("chromo","position","dxy")], file=paste(opt$out,"txt",sep="."), quote=FALSE, row.names=FALSE, sep='\t')
 print('Created Dxy_persite.txt')
 
 ### Print global dxy
 print(paste0('Global dxy is: ',sum(allfreq$dxy)))
-if(!is.null(opt$totLen)){
-  print(paste0('Global per site Dxy is: ',sum(allfreq$dxy)/opt$totLen))
-}
+
+print(paste0('Global per site Dxy is: ',sum(allfreq$dxy)/nrow(allfreq)))

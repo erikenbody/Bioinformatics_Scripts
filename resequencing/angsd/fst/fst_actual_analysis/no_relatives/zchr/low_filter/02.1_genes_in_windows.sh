@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH -e ./logs/genes_win.err            # File to which STDERR will be written
-#SBATCH -o ./logs/genes_win.out           # File to which STDOUT will be written
+#SBATCH -e genes_win.err            # File to which STDERR will be written
+#SBATCH -o genes_win.out           # File to which STDOUT will be written
 #SBATCH -J genes_win           # Job name
 #SBATCH --mail-type=ALL              # Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mem=10000
@@ -10,29 +10,24 @@
 #SBATCH --qos=normal
 #SBATCH --mail-user=eenbody@tulane.edu # Email to send notifications to
 #
-if [ -d "/home/eenbody/reseq_WD/angsd/fst_angsd/fst_actual_analysis/logs" ]; then echo "dir exists" ; else mkdir /home/eenbody/reseq_WD/angsd/fst_angsd/fst_actual_analysis/logs; fi
-
-##RUN BOTH LOW AND HIGH FILTERS AT ONCE###
-
-###FIRST RUN LOW FILT####
 
 module load R/3.4.1-intel
 export R_LIBS_USER=/home/eenbody/BI_software/R/Library:$R_LIBS_USER
 
-###NOW RUN SENSIBLE FILT ####
-CHR=autosome
-EXT=sensible_filter_NR
+CHR=zchr
+#aida_more_combined ; aid_more_combined_NR ; cov_40_300_20Q ; nocov_NR ; nocov_skiptri
+EXT=low_filter_NR
 #all or NR
 SUBSET=NR
-DESCRIPTION=NR_sensible
-
-
+DESCRIPTION=low_filter_NR
+#
 HOME_D=/home/eenbody/reseq_WD/angsd/fst_angsd
 WORK_D=/home/eenbody/reseq_WD/angsd/fst_angsd/fst_actual_analysis/no_relatives/$CHR
-SAMPLEDIR=/home/eenbody/reseq_WD/angsd/fst_angsd/auto/$EXT
+SAMPLEDIR=/home/eenbody/reseq_WD/angsd/fst_angsd/zchr/$EXT
 cd ${WORK_D}/${DESCRIPTION}
 
 GENEFILE="/home/eenbody/WSFW_assembly_maker2.maker.output/functional_annotation/maker_functional_final_output/gene_only.db"
+#despite the filename, this file include zchr scaffolds that are >50000
 FILTERFILE="/home/eenbody/reseq_WD/angsd/fst_angsd/autosome_scaffolds_gr_50000_head.txt"
 
 if [ -d "GenesInWin" ]; then echo "ManPlot dir exists" ; else mkdir GenesInWin; fi

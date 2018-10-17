@@ -118,14 +118,3 @@ angsd -bam $HOME_D/${POP}_bamlist_NR.txt -ref $REFGENOME -anc $ANC -rf $REGIONS 
 -GL 1 -skipTriallelic 1
 
 gunzip -c ${COMP}_4dxy.mafs.gz > ${COMP}_4dxy.mafs
-
-#9
-POP=lorentzi
-COMP=lorentzi_moretoni
-MININD=5
-angsd -bam $HOME_D/${POP}_bamlist_NR.txt -ref $REFGENOME -anc $ANC -rf $REGIONS -uniqueOnly 1 -P 20 -sites ${COMP}_NH_cut.mafs \
--remove_bads 1 -trim 0 -minMapQ 20 -minQ 20 -only_proper_pairs 0 -minInd $MININD \
--out ${COMP}_4dxy -doCounts 1 -doMaf 1 -doMajorMinor 1 \
--GL 1 -skipTriallelic 1
-
-gunzip -c ${COMP}_4dxy.mafs.gz > ${COMP}_4dxy.mafs
