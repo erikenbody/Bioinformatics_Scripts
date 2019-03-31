@@ -16,8 +16,8 @@ export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk.x86_64/jre
 module load python/2.7.11
 module load mpich/3.1.4
 module load bzip2/1.0.6 #added 2019
-module load anaconda
-source activate maker_depends #this way key - fresh environ with augustus, rmblastn, snoscan, trnascan
+#module load anaconda
+#source activate maker_depends #this way key - fresh environ with augustus, rmblastn, snoscan, trnascan
 
 MAKER_HOME=/home/eenbody/RBFW_RNAseq/Genome_annotation/maker/RBFW.final.assembly.maker.output
 WORK_D=/home/eenbody/RBFW_RNAseq/Genome_annotation/maker/RBFW.final.assembly.maker.output/functional_annotation
@@ -25,7 +25,7 @@ cd $WORK_D
 #
 interproscan.sh -i $MAKER_HOME/RBFW.final.assembly.all.maker.proteins.fasta -t p -dp -pa --goterms --iprlookup
 #
-ipr_update_gff RBFW.final.assembly.all.default.gff RBFW.final.assembly.all.maker.proteins.fasta.tsv > RBFW.final.assembly.all.default_ipr.gff
+ipr_update_gff $MAKER_HOME/RBFW.final.assembly.all.gff RBFW.final.assembly.all.maker.proteins.fasta.tsv > RBFW.final.assembly.all.default_ipr.gff
 
 quality_filter.pl -s RBFW.final.assembly.all.default_ipr.gff  > RBFW.final.assembly.all.standard_ipr.gff
 grep -cP '\tgene\t' RBFW.final.assembly.all.standard_ipr.gff
