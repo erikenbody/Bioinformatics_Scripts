@@ -12,7 +12,8 @@ SAMPLEDIR=/lustre/project/jk/Khalil_WD/RBFW_RNAseq/raw_RNAseq
 WORK_D=/lustre/project/jk/Khalil_WD/RBFW_RNAseq/Preprocessing
 
 cd $SAMPLEDIR
-FILENAME=`ls -1 *_R1_001.fastq.gz | awk -v line=$SLURM_ARRAY_TASK_ID '{if (NR == line) print $0}'`
+#FILENAME=`ls -1 *_R1_001.fastq.gz | awk -v line=$SLURM_ARRAY_TASK_ID '{if (NR == line) print $0}'` # Ran before we got brains
+FILENAME=`ls -1 *malMel*R1*fastq.gz | awk -v line=$SLURM_ARRAY_TASK_ID '{if (NR == line) print $0}'` # Ran when we got brains
 SAMPLE=$(echo $FILENAME | rev | cut -c 17- | rev | uniq)
 cd $WORK_D
 

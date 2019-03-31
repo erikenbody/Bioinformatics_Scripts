@@ -1,0 +1,11 @@
+mpg_L13566-1_F101_S32_clp.fq.1.gz
+mpg_L13570-1_B06_S38_clp.fq.1.gz
+mpg_L14933-1_malMel-H-B10_S57_clp.fq.1.gz
+mpg_L14946-1_malMel-P-B10_S3_clp.fq.1.gz
+mpg_L14920-1_malMel-A-B10_S37_clp.fq.1.gz
+
+mpg_L13566-1_F101_S32_clp.fq.2.gz
+mpg_L13570-1_B06_S38_clp.fq.2.gz
+mpg_L14933-1_malMel-H-B10_S57_clp.fq.2.gz
+mpg_L14946-1_malMel-P-B10_S3_clp.fq.2.gz
+mpg_L14920-1_malMel-A-B10_S37_clp.fq.2.gz
