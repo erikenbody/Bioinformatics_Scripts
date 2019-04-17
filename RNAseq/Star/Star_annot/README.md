@@ -1,4 +1,4 @@
-###RNAseq read mapping to annotated genome
+### RNAseq read mapping to annotated genome
 
 My general workflow looked something like this:
 
@@ -54,7 +54,7 @@ This script should be submitted as an array, one for each sample. So if you have
 sbatch --array=1-100 02_star_map_annot.sh
 ```
 
-###Output
+### Output
 
 The output should include a bunch of files `*ReadsPerGene.out.tab.DEseq.input` that look like the below output. These are counts per gene (not transcript). This can be used as input for DeSeq2 using the import function that is used for RSEM (output is RSEM formatted output).
 ```
