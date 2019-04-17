@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=20
 #SBATCH -e cleanup2_%A_%a.err           # File to which STDERR will be written
 #SBATCH -o cleanup2_%A_%a.out         # File to which STDOUT will be written
-#SBATCH --mem=256000                     # Memory requested
+#SBATCH --mem=128000                     # Memory requested
 #SBATCH -J cleanup2       # Job name
 #SBATCH --qos=long
 #SBATCH --time=7-00:00:00
